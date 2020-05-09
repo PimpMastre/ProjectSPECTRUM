@@ -4,19 +4,14 @@ import RPi.GPIO as GPIO
 from timeit import default_timer
 
 previous_timestamp = default_timer()
-out = open("speeds.txt", "w")
 
 def sensorCallback(channel):
+  global previous_timestamp
   if not(GPIO.input(channel)):
-    global previous_timestamp,out
-    # Called if sensor output changes
     new_stamp = default_timer()
     stamp = new_stamp - previous_timestamp
     previous_timestamp = new_stamp
-    if not GPIO.input(channel):
-      # Magnet
-      #out.write(str(round(60/stamp)) + 'RPM\n')
-      print(str(round(60/stamp)) + 'RPM: ' + str(stamp))
+    print(str(round(60/stamp)) + 'RPM: ' + str(stamp))
 
 def main():
   # Wrap main content in a try block so we can
