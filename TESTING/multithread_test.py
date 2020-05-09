@@ -20,10 +20,10 @@ GPIO.setmode(GPIO.BCM)
 previous_timestamp = default_timer()
 
 
-def delayedHalf(delay):
+def printingThread(delay, color):
     time.sleep(delay)
     for i in range(pixels.count()):
-        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(255, 0, 0))
+        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(color[0], color[1], color[2]))
     pixels.show()
     pixels.clear()
     pixels.show()
@@ -35,23 +35,11 @@ def sensorCallback(channel):
         new_stamp = default_timer()
         stamp = new_stamp - previous_timestamp
         previous_timestamp = new_stamp
-        r = random.randint(0, 255)
-        g = random.randint(0, 255)
-        b = random.randint(0, 255)
-	thread = threading.Thread(target=delayedHalf, args=[stamp/3])
-	thread.start()
-        n = 5
+        n = 4
+        colors = ((255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 255))
         for i in range(n):
-            show_stamp = default_timer()
-            for i in range(pixels.count()):
-                pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(r, b, g))
-            pixels.show()
-            pixels.clear()
-            pixels.show()
-            timeTaken = default_timer() - show_stamp
-            slep = (stamp - timeTaken) / (n * 2)
-            # print(slep)
-            time.sleep(slep)
+            thread = threading.Thread(target=printingThread, args=[stamp / (i + 1), colors[i]])
+            thread.start()
 
 
 if __name__ == "__main__":
