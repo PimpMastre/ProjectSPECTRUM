@@ -1,8 +1,7 @@
 # Simple demo of of the WS2801/SPI-like addressable RGB LED lights.
 import time
 import RPi.GPIO as GPIO
-import random
-import threading
+import sys
 from timeit import default_timer
 
 # Import the WS2801 module.
@@ -15,33 +14,31 @@ PIXEL_COUNT = 18
 # Alternatively specify a hardware SPI connection on /dev/spidev0.0:
 SPI_PORT = 0
 SPI_DEVICE = 0
-pixels = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE), gpio=GPIO)
 GPIO.setmode(GPIO.BCM)
+
+# globals
+pixels = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE), gpio=GPIO)
 previous_timestamp = default_timer()
-
-
-def printingThread(delay, color):
-    if delay > 0:
-        time.sleep(delay)
-    for i in range(pixels.count()):
-        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(color[0], color[1], color[2]))
-    pixels.show()
-    pixels.clear()
-    pixels.show()
+colors = ((255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 255))
+threadNumber = int(sys.argv[1])
 
 
 def sensorCallback(channel):
-    global previous_timestamp, pixels
+    global previous_timestamp, pixels, colors, threadNumber
     if not (GPIO.input(channel)):
         new_stamp = default_timer()
         stamp = new_stamp - previous_timestamp
         previous_timestamp = new_stamp
-        n = 4
-        colors = ((255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 255))
-        time_to_sleep = stamp / n
-        for i in range(n):
-            thread = threading.Thread(target=printingThread, args=[time_to_sleep * i, colors[i]])
-            thread.start()
+
+        time_to_sleep = stamp / 4 * threadNumber
+        if time_to_sleep > 0:
+            time.sleep(time_to_sleep)
+        color = colors[threadNumber]
+        for i in range(pixels.count()):
+            pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(color[0], color[1], color[2]))
+        pixels.show()
+        pixels.clear()
+        pixels.show()
 
 
 if __name__ == "__main__":
