@@ -24,9 +24,13 @@ color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 totalThreadCount = int(sys.argv[1])
 currentThreadNumber = int(sys.argv[2])
 
+# waving stuff
+currentLed = 0
+rising = True
+
 
 def sensorCallback(channel):
-    global previous_timestamp, pixels, color, currentThreadNumber
+    global previous_timestamp, pixels, color, currentThreadNumber, totalThreadCount, currentLed, rising
     if not (GPIO.input(channel)):
         new_stamp = default_timer()
         stamp = new_stamp - previous_timestamp
@@ -36,9 +40,21 @@ def sensorCallback(channel):
         if time_to_sleep > 0:
             time.sleep(time_to_sleep)
 
-        for i in range(pixels.count()):
+        for i in range(currentLed):
             pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(color[0], color[1], color[2]))
         pixels.show()
+
+        if rising:
+            currentLed += 1
+            if currentLed > 17:
+                currentLed -= 2
+                rising = False
+        else:
+            currentLed -= 1
+            if currentLed < 0:
+                currentLed = 1
+                rising = True
+
         # pixels.clear()
         # pixels.show()
 
