@@ -2,6 +2,7 @@
 import time
 import RPi.GPIO as GPIO
 import random
+import threading
 from timeit import default_timer
 
 # Import the WS2801 module.
@@ -19,6 +20,15 @@ GPIO.setmode(GPIO.BCM)
 previous_timestamp = default_timer()
 
 
+def delayedHalf(delay):
+    time.sleep(delay)
+    for i in range(pixels.count()):
+        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(255, 0, 0))
+    pixels.show()
+    pixels.clear()
+    pixels.show()
+
+
 def sensorCallback(channel):
     global previous_timestamp, pixels
     if not (GPIO.input(channel)):
@@ -28,7 +38,7 @@ def sensorCallback(channel):
         r = random.randint(0, 255)
         g = random.randint(0, 255)
         b = random.randint(0, 255)
-        n = 10
+        n = 5
         for i in range(n):
             show_stamp = default_timer()
             for i in range(pixels.count()):
@@ -36,6 +46,8 @@ def sensorCallback(channel):
             pixels.show()
             pixels.clear()
             pixels.show()
+            thread = threading.Thread(target=delayedHalf, args=[stamp/2])
+            thread.start()
             timeTaken = default_timer() - show_stamp
             slep = (stamp - timeTaken) / (n * 2)
             # print(slep)
