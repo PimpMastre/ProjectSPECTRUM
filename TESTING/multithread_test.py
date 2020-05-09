@@ -38,6 +38,8 @@ def sensorCallback(channel):
         r = random.randint(0, 255)
         g = random.randint(0, 255)
         b = random.randint(0, 255)
+	thread = threading.Thread(target=delayedHalf, args=[stamp/3])
+	thread.start()
         n = 5
         for i in range(n):
             show_stamp = default_timer()
@@ -46,8 +48,6 @@ def sensorCallback(channel):
             pixels.show()
             pixels.clear()
             pixels.show()
-            thread = threading.Thread(target=delayedHalf, args=[stamp/2])
-            thread.start()
             timeTaken = default_timer() - show_stamp
             slep = (stamp - timeTaken) / (n * 2)
             # print(slep)
