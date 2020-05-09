@@ -1,17 +1,22 @@
 import time
 import datetime
 import RPi.GPIO as GPIO
+from timeit import default_timer
+
+previous_timestamp = default_timer()
+out = open("speeds.txt", "w")
 
 def sensorCallback(channel):
-  # Called if sensor output changes
-  timestamp = time.time()
-  stamp = datetime.datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
-  if GPIO.input(channel):
-    # No magnet
-    print("Sensor HIGH " + stamp)
-  else:
-    # Magnet
-    print("Sensor LOW " + stamp)
+  if not(GPIO.input(channel)):
+    global previous_timestamp,out
+    # Called if sensor output changes
+    new_stamp = default_timer()
+    stamp = new_stamp - previous_timestamp
+    previous_timestamp = new_stamp
+    if not GPIO.input(channel):
+      # Magnet
+      #out.write(str(round(60/stamp)) + 'RPM\n')
+      print(str(round(60/stamp)) + 'RPM: ' + str(stamp))
 
 def main():
   # Wrap main content in a try block so we can
@@ -40,7 +45,7 @@ print("Setup GPIO pin as input on GPIO17")
 # Set Switch GPIO as input
 # Pull high by default
 GPIO.setup(17 , GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(17, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
+GPIO.add_event_detect(17, GPIO.BOTH, callback=sensorCallback)
 
 if __name__=="__main__":
    main()
