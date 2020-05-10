@@ -3,6 +3,7 @@ import time
 import RPi.GPIO as GPIO
 import sys
 import random
+from multiprocessing import shared_memory
 from timeit import default_timer
 
 # Import the WS2801 module.
@@ -24,13 +25,11 @@ color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 totalThreadCount = int(sys.argv[1])
 currentThreadNumber = int(sys.argv[2])
 
-# waving stuff
-currentLed = random.randint(0,16)
-rising = True
+shared = shared_memory.SharedMemory("LedPositions", False)
 
 
 def sensorCallback(channel):
-    global previous_timestamp, pixels, color, currentThreadNumber, totalThreadCount, currentLed, rising
+    global previous_timestamp, pixels, color, currentThreadNumber, totalThreadCount, shared
     if not (GPIO.input(channel)):
         pixels.clear()
         new_stamp = default_timer()
@@ -41,20 +40,11 @@ def sensorCallback(channel):
         if time_to_sleep > 0:
             time.sleep(time_to_sleep)
 
-        for i in range(currentLed):
+        current_led = int(shared.buf[0])
+
+        for i in range(current_led):
             pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(color[0], color[1], color[2]))
         pixels.show()
-
-        if rising:
-            currentLed += 4
-            if currentLed > 17:
-                currentLed = pixels.count() - (currentLed - pixels.count())
-                rising = False
-        else:
-            currentLed -= 4
-            if currentLed < 0:
-                currentLed = -currentLed
-                rising = True
 
         # pixels.clear()
         # pixels.show()
