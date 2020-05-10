@@ -25,14 +25,15 @@ totalThreadCount = int(sys.argv[1])
 currentThreadNumber = int(sys.argv[2])
 
 # waving stuff
-currentLed = 0
+currentLed = random.randint(0,16)
 rising = True
 
 
 def sensorCallback(channel):
     global previous_timestamp, pixels, color, currentThreadNumber, totalThreadCount, currentLed, rising
     if not (GPIO.input(channel)):
-        new_stamp = default_timer()
+        pixels.clear()
+	new_stamp = default_timer()
         stamp = new_stamp - previous_timestamp
         previous_timestamp = new_stamp
 
@@ -45,14 +46,14 @@ def sensorCallback(channel):
         pixels.show()
 
         if rising:
-            currentLed += 1
+            currentLed += 4
             if currentLed > 17:
-                currentLed -= 2
+                currentLed = pixels.count() - (currentLed - pixels.count())
                 rising = False
         else:
-            currentLed -= 1
+            currentLed -= 4
             if currentLed < 0:
-                currentLed = 1
+                currentLed = -currentLed
                 rising = True
 
         # pixels.clear()

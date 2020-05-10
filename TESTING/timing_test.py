@@ -47,9 +47,11 @@ if __name__ == "__main__":
     pixels.clear()
     pixels.show()  # Make sure to call show() after changing any pixels!
 
-    GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(17, GPIO.BOTH, callback=sensorCallback)
-
+    #GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    #GPIO.add_event_detect(17, GPIO.BOTH, callback=sensorCallback)
+    for i in range(pixels.count()):
+	pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(255, 0, 0))
+    pixels.show()
     try:
         while True:
             time.sleep(0.1)
