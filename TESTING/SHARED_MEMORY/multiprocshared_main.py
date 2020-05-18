@@ -6,12 +6,12 @@ from multiprocessing import shared_memory
 
 if __name__ == "__main__":
     # cmdline arguments
-    total_threads = sys.argv[1]
-    led_speed = sys.argv[2]
+    total_threads = int(sys.argv[1])
+    led_speed = int(sys.argv[2])
 
     processIds = []
     for i in range(int(total_threads)):
-        command = 'python multiprocshared_worker.py ' + total_threads + ' ' + str(i) + ' &'
+        command = 'python multiprocshared_worker.py ' + str(total_threads) + ' ' + str(i) + ' &'
         print('running command \"' + command + '\"...')
         pid = subprocess.Popen(command.split(' '))
         processIds.append(pid)
@@ -36,6 +36,7 @@ if __name__ == "__main__":
                     rising = True
 
             shared.buf[0] = currentLed
+            time.sleep(0.1)
 
     except KeyboardInterrupt:
         print("Killing spawned processes...")

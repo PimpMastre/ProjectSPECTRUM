@@ -25,7 +25,7 @@ totalThreadCount = int(sys.argv[1])
 currentThreadNumber = int(sys.argv[2])
 
 # waving stuff
-currentLed = random.randint(0,16)
+currentLed = 17
 rising = True
 
 
@@ -46,12 +46,12 @@ def sensorCallback(channel):
         pixels.show()
 
         if rising:
-            currentLed += 4
+            #currentLed += 4
             if currentLed > 17:
                 currentLed = pixels.count() - (currentLed - pixels.count())
                 rising = False
         else:
-            currentLed -= 4
+            #currentLed -= 4
             if currentLed < 0:
                 currentLed = -currentLed
                 rising = True

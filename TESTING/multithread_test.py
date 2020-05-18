@@ -36,7 +36,7 @@ def sensorCallback(channel):
         new_stamp = default_timer()
         stamp = new_stamp - previous_timestamp
         previous_timestamp = new_stamp
-        n = 4
+        n = 2
         colors = ((255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 255))
         time_to_sleep = stamp / n
         for i in range(n):

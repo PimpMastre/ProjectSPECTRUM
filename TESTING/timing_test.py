@@ -32,7 +32,7 @@ def sensorCallback(channel):
         for i in range(n):
             show_stamp = default_timer()
             for i in range(pixels.count()):
-                pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(r, b, g))
+            	pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(r, b, g))
             pixels.show()
             pixels.clear()
             pixels.show()

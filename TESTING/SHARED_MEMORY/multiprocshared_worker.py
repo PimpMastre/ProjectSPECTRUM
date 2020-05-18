@@ -41,6 +41,7 @@ def sensorCallback(channel):
             time.sleep(time_to_sleep)
 
         current_led = int(shared.buf[0])
+        #print(current_led)
 
         for i in range(current_led):
             pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(color[0], color[1], color[2]))
