@@ -22,6 +22,7 @@ class BarVisualiser:
 
         self.prev_peaks_buffer_length = 3
         self.prev_peaks = [[0 for x in range(self.num_bars)] for y in range(self.prev_peaks_buffer_length)]
+        self.collection_percentage = 10
 
         # pyaudio stuff
         self.FORMAT = pyaudio.paInt16
@@ -68,31 +69,22 @@ class BarVisualiser:
         self.prev_peaks.pop(0)
         self.prev_peaks.append(new_peaks)
 
-    @staticmethod
-    def interpolate_list(lst, factor):
-        interpolated_result = []
-        for i in range(len(lst) - 1):
-            interpolated_result.append(lst[i])
-            for j in range(factor):
-                interpolation = []
-                for k in lst[i]:
-                    interpolation.append(k / factor * j)
-                interpolated_result.append(interpolation)
-
-        return interpolated_result
-
     def update_fft(self):
         self.process_stream()
         test = np.geomspace(20, self.CHUNK / 2, num=self.num_bars)
-        spec_width = self.CHUNK // self.num_bars
-        averages = [np.average(np.abs(self.fft_data)[:int(test[0])])]
+        # spec_width = self.CHUNK // self.num_bars
+        absolute_fft_data = np.abs(self.fft_data)
+        n = len(absolute_fft_data) * self.collection_percentage / 100
+        averaged_percent = np.average(absolute_fft_data[int(test[x]):int(test[x + 1])].argsort()[::-1][:n])
+        averages = [averaged_percent]
         # self.fft_data = np.clip(self.fft_data, a_min=0, a_max=500000)
         for x in range(self.num_bars - 1):
-            averages.append(np.average(np.abs(self.fft_data)[int(test[x]):int(test[x + 1])]))
+            n = len(absolute_fft_data) * self.collection_percentage / 100
+            averaged_percent = np.average(absolute_fft_data[int(test[x]):int(test[x + 1])].argsort()[::-1][:n])
+            averages.append(averaged_percent)
 
         self.update_prev_peaks(np.array(averages))
-        interpolated_averages = self.interpolate_list(self.prev_peaks, 2)
-        averages = np.average(interpolated_averages, axis=0)
+        averages = np.average(self.prev_peaks, axis=0)
 
         self.bar_graph.setOpts(height=np.array(averages))
 
