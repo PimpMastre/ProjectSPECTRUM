@@ -62,14 +62,24 @@ class BarVisualiser:
         for x in range(self.num_bars):
             peaks.append(np.average(np.abs(wf_data)[x * spec_width:(x + 1) * spec_width]))
 
-        self.update_prev_peaks(peaks)
-        peaks = np.average(self.prev_peaks)
-
         self.bar_graph.setOpts(x=self.x_axis, height=np.array(peaks))
 
     def update_prev_peaks(self, new_peaks):
         self.prev_peaks.pop(0)
         self.prev_peaks.append(new_peaks)
+
+    @staticmethod
+    def interpolate_list(lst, factor):
+        interpolated_result = []
+        for i in range(len(lst) - 1):
+            interpolated_result.append(lst[i])
+            for j in range(factor):
+                interpolation = []
+                for k in lst[i]:
+                    interpolation.append(k / factor * j)
+                interpolated_result.append(interpolation)
+
+        return interpolated_result
 
     def update_fft(self):
         self.process_stream()
@@ -79,6 +89,10 @@ class BarVisualiser:
         # self.fft_data = np.clip(self.fft_data, a_min=0, a_max=500000)
         for x in range(self.num_bars - 1):
             averages.append(np.average(np.abs(self.fft_data)[int(test[x]):int(test[x + 1])]))
+
+        self.update_prev_peaks(np.array(averages))
+        interpolated_averages = self.interpolate_list(self.prev_peaks, 2)
+        averages = np.average(interpolated_averages, axis=0)
 
         self.bar_graph.setOpts(height=np.array(averages))
 
