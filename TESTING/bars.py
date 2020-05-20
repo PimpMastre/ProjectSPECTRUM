@@ -16,13 +16,14 @@ class BarVisualiser:
         self.fft_data = []
         self.frequency_data = []
 
-        self.num_bars = 35
+        self.num_bars = 6
+        self.max_bar_height = 18
+        self.frequency_cut = 50
         self.x_axis = np.arange(self.num_bars)
         self.y_axis = None
 
-        self.prev_peaks_buffer_length = 3
+        self.prev_peaks_buffer_length = 2
         self.prev_peaks = [[0 for x in range(self.num_bars)] for y in range(self.prev_peaks_buffer_length)]
-        self.collection_percentage = 10
 
         # pyaudio stuff
         self.FORMAT = pyaudio.paInt16
@@ -71,18 +72,24 @@ class BarVisualiser:
 
     def update_fft(self):
         self.process_stream()
-        test = np.geomspace(20, self.CHUNK / 2, num=self.num_bars)
+        # MAYBE ADD FREQUENCY CUTTING/EQUALIZER
+        cut = int((self.CHUNK / 2) * self.frequency_cut / 100)
+        test = np.geomspace(20, cut, num=self.num_bars)
+        #test = np.linspace(20, cut, num=self.num_bars)
         # spec_width = self.CHUNK // self.num_bars
+        # clip to 1M, get percentages for display
+        self.fft_data = np.clip(self.fft_data, a_min=0, a_max=1000000)
+        
         absolute_fft_data = np.abs(self.fft_data)
-        n = len(absolute_fft_data) * self.collection_percentage / 100
-        averaged_percent = np.average(absolute_fft_data[int(test[x]):int(test[x + 1])].argsort()[::-1][:n])
-        averages = [averaged_percent]
-        # self.fft_data = np.clip(self.fft_data, a_min=0, a_max=500000)
+        section = absolute_fft_data[:int(test[0])]
+        averages = [np.average(section) * 100 / 1000000]
         for x in range(self.num_bars - 1):
-            n = len(absolute_fft_data) * self.collection_percentage / 100
-            averaged_percent = np.average(absolute_fft_data[int(test[x]):int(test[x + 1])].argsort()[::-1][:n])
-            averages.append(averaged_percent)
+            section = absolute_fft_data[int(test[x]):int(test[x + 1])]
+            avg = np.average(section) * 100 / 1000000
+            averages.append(avg)
 
+        
+        
         self.update_prev_peaks(np.array(averages))
         averages = np.average(self.prev_peaks, axis=0)
 
@@ -91,10 +98,18 @@ class BarVisualiser:
     def animation(self):
         timer = QtCore.QTimer()
         timer.timeout.connect(self.update_fft)
-        timer.start(10)
+        timer.start(1)
         self.start()
+
+    def testasdf(self):
+        data = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+        #n = int(abs(0-10) * self.collection_percentage / 100)
+        #averaged_percent = np.average(np.argsort(-data[:9])[:n])
+        #print(averaged_percent)
+        print(data.argsort()[-5:][::-1])
 
 
 if __name__ == '__main__':
     visualiser = BarVisualiser()
+    #visualiser.testasdf()
     visualiser.animation()
