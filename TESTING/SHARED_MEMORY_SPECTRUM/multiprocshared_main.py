@@ -5,7 +5,19 @@ import random
 from multiprocessing import shared_memory
 import numpy as np
 import pyaudio
-from pyqtgraph.Qt import QtCore
+from threading import Thread, Event
+from timeit import default_timer
+
+
+class CustomTimerThread(Thread):
+    def __init__(self, event, func):
+        Thread.__init__(self)
+        self.stopped = event
+        self.function = func
+
+    def run(self):
+        while not self.stopped.wait(0.2):
+            self.function()
 
 
 class BarVisualiser:
@@ -16,7 +28,7 @@ class BarVisualiser:
         self.fft_data = []
         self.frequency_data = []
 
-        self.num_bars = 6
+        self.num_bars = 4
         self.max_bar_height = 18
         self.frequency_cut = 50
 
@@ -25,9 +37,9 @@ class BarVisualiser:
 
         # pyaudio stuff
         self.FORMAT = pyaudio.paInt16
-        self.CHANNELS = 2
-        self.RATE = 44100
-        self.CHUNK = 1024 * 2
+        self.CHANNELS = 1
+        self.RATE = 8000
+        self.CHUNK = 1024 * 4
 
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(
@@ -53,6 +65,7 @@ class BarVisualiser:
         self.prev_peaks.append(new_peaks)
 
     def update_fft(self):
+        #prev_stamp = default_timer()
         self.process_stream()
         # MAYBE ADD FREQUENCY CUTTING/EQUALIZER
         cut = int((self.CHUNK / 2) * self.frequency_cut / 100)
@@ -72,27 +85,29 @@ class BarVisualiser:
 
         self.update_prev_peaks(np.array(averages))
         averages = np.average(self.prev_peaks, axis=0)
-
+        #print(default_timer() - prev_stamp)
         for j in range(len(averages)):
-            self.shared_buffer[j] = averages[j]
+            self.shared_buffer.buf[j] = int(averages[j])
 
     def animation(self):
-        timer = QtCore.QTimer()
-        timer.timeout.connect(self.update_fft)
-        timer.start(10)
+        stopFlag = Event()
+        thread = CustomTimerThread(stopFlag, self.update_fft)
+        thread.start()
 
 
 if __name__ == "__main__":
     # cmdline arguments
     total_threads = int(sys.argv[1])
-    led_speed = int(sys.argv[2])
+    #led_speed = int(sys.argv[2])
 
     processIds = []
     for i in range(int(total_threads)):
         command = 'python multiprocshared_worker.py ' + str(total_threads) + ' ' + str(i) + ' &'
         print('running command \"' + command + '\"...')
-        pid = subprocess.Popen(command.split(' '))
-        processIds.append(pid)
+        #pid = subprocess.Popen(command.split(' '))
+        #processIds.append(pid)
+
+    print('Successfully started processes with pids: ', processIds)
 
     rising = True
     currentLed = random.randint(0, 16)
@@ -103,5 +118,5 @@ if __name__ == "__main__":
     visualiser = BarVisualiser(shared)
     visualiser.animation()
 
-    except KeyboardInterrupt:
-        print("Killing spawned processes...")
+    #except KeyboardInterrupt:
+     #   print("Killing spawned processes...")

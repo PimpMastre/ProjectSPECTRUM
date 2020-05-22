@@ -41,7 +41,7 @@ def sensorCallback(channel):
             time.sleep(time_to_sleep)
 
         led_height_percentage = int(shared.buf[currentThreadNumber])
-        current_led = led_height_percentage * 18 / 100
+        current_led = 18#int(led_height_percentage * 18 / 100)
         #print(current_led)
 
         for k in range(1):
