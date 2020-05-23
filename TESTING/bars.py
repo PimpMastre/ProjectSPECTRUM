@@ -19,6 +19,7 @@ class BarVisualiser:
         self.num_bars = 6
         self.max_bar_height = 18
         self.frequency_cut = 50
+        self.data_amplification = 100
         self.x_axis = np.arange(self.num_bars)
         self.y_axis = None
 
@@ -82,14 +83,15 @@ class BarVisualiser:
         
         absolute_fft_data = np.abs(self.fft_data)
         section = absolute_fft_data[:int(test[0])]
-        averages = [np.average(section) * 100 / 1000000]
+        avg = np.average(section) * 100 / 1000000
+        amp = self.data_amplification * avg / 100
+        averages = [avg + amp]
         for x in range(self.num_bars - 1):
             section = absolute_fft_data[int(test[x]):int(test[x + 1])]
             avg = np.average(section) * 100 / 1000000
-            averages.append(avg)
+            amp_value = self.data_amplification * avg / 100
+            averages.append(avg + amp_value)
 
-        
-        
         self.update_prev_peaks(np.array(averages))
         averages = np.average(self.prev_peaks, axis=0)
 
