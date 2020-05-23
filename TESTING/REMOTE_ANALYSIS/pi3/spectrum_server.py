@@ -34,7 +34,7 @@ class BarVisualiser:
         self.num_bars = 6
         self.max_bar_height = 18
         self.frequency_cut = 50
-        self.data_amplification = 100
+        self.data_amplification = 200
         self.x_axis = np.arange(self.num_bars)
         self.y_axis = None
 
