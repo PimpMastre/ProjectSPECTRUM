@@ -41,7 +41,7 @@ if __name__ == "__main__":
     rising = True
     currentLed = random.randint(0, 16)
 
-    shared = shared_memory.SharedMemory("LedPositions", True, 64)
+    shared = shared_memory.SharedMemory("LedPositions", True, 128)
 
     sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 1)
@@ -56,7 +56,7 @@ if __name__ == "__main__":
         while True:
             time.sleep(0.01)
             try:
-                data, addr = sock.recvfrom(256)
+                data, addr = sock.recvfrom(512)
                 sock.settimeout(0)
                 decoded_data = eval(data.decode('utf-8'))
                 #print(decoded_data)
