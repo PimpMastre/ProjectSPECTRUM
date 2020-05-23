@@ -4,7 +4,7 @@ import RPi.GPIO as GPIO
 import sys
 import random
 from timeit import default_timer
-import socket
+from multiprocessing import shared_memory
 
 # Import the WS2801 module.
 import Adafruit_WS2801
@@ -21,40 +21,41 @@ GPIO.setmode(GPIO.BCM)
 # globals
 pixels = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE), gpio=GPIO)
 previous_timestamp = default_timer()
-color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 255)]
+#color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 totalThreadCount = int(sys.argv[1])
 currentThreadNumber = int(sys.argv[2])
+shared = shared_memory.SharedMemory("LedPositions", False)
+rotationTime = shared_memory.SharedMemory("RotationTime", False)
 
-UDP_IP = "192.168.0.70"
-UDP_PORT = 6942
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind((UDP_IP, UDP_PORT))
 
 def sensorCallback(channel):
     global previous_timestamp, pixels, color, currentThreadNumber, totalThreadCount, shared
     if not (GPIO.input(channel)):
-        pixels.clear()
-        new_stamp = default_timer()
-        stamp = new_stamp - previous_timestamp
-        previous_timestamp = new_stamp
+        #pixels.clear()
+        #new_stamp = default_timer()
+        #stamp = new_stamp - previous_timestamp
+        #previous_timestamp = new_stamp
+        stamp_len = rotationTime.buf[0]
+        stamp = "0."
+        for i in range(stamp_len):
+            stamp += str(rotationTime.buf[i + 1])
+        stamp = float(stamp)
 
         time_to_sleep = stamp / totalThreadCount * currentThreadNumber
         if time_to_sleep > 0:
             time.sleep(time_to_sleep)
-
-        data = sock.recvfrom(256)
-        print(data)
-        current_led = 1#int(led_height_percentage * 18 / 100)
+        led_height_percentage = shared.buf[currentThreadNumber]
+        current_led = min(18, int(led_height_percentage * 18 / 100))
         #print(current_led)
-
+        color = colors[currentThreadNumber]
         for k in range(1):
+            pixels.clear()
             for i in range(current_led):
                 pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(color[0], color[1], color[2]))
             pixels.show()
             #pixels.clear()
             #pixels.show()
-
         # pixels.clear()
         # pixels.show()
 
@@ -70,5 +71,7 @@ if __name__ == "__main__":
     try:
         while True:
             time.sleep(0.1)
-    except KeyboardInterrupt:
+    except:
         GPIO.cleanup()
+        shared.close()
+        rotationTime.close()
