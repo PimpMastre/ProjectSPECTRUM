@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import time
-from Master.Utils.udpTransmitter import UdpTransmitter
-from Master.audioProcessor import AudioProcessor
+from Utils.udpTransmitter import UdpTransmitter
+from audioProcessor import AudioProcessor
 
 if __name__ == '__main__':
     udp_transmitter = UdpTransmitter("192.168.0.70", 6942)
