@@ -2,8 +2,9 @@
 import time
 import RPi.GPIO as GPIO
 import sys
+from timeit import default_timer
 from multiprocessing import shared_memory
-from Slave.Utils.ledExtensions import LedExtensions
+from Utils.ledExtensions import LedExtensions
 
 
 class Worker:
@@ -13,13 +14,13 @@ class Worker:
         self.bars_per_sector = bars_per_sector
         self.leds = LedExtensions()
 
-        self.led_positions = shared_memory.SharedMemory("LedPositions", False)
+        self.led_positions = shared_memory.SharedMemory("LedData", False)
         self.led_colors = shared_memory.SharedMemory("LedColors", False)
         self.rotation_time = shared_memory.SharedMemory("RotationTime", False)
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(17, GPIO.RISING, callback=self.on_magnet_pass, bouncetime=0)
+        GPIO.add_event_detect(17, GPIO.RISING, callback=self.on_magnet_pass, bouncetime=1)
 
     def get_rotation_time(self):
         stamp_len = self.rotation_time.buf[0]
@@ -27,8 +28,8 @@ class Worker:
         return float(stamp)
 
     def wait(self, full_rotation_time):
-        time_to_sleep = full_rotation_time / self.sector_number * self.sector_number
         if self.sector_number != 0:
+            time_to_sleep = full_rotation_time / self.sector_count * self.sector_number
             time.sleep(time_to_sleep)
 
     def get_section_led_height(self, bar_index):
@@ -37,15 +38,14 @@ class Worker:
 
     def get_section_led_color(self, bar_index):
         offset = ((self.sector_number * self.bars_per_sector) + bar_index) * 3
-        return self.led_positions.buf[offset:offset+2]
+        return (int(self.led_colors.buf[offset]), int(self.led_colors.buf[offset + 1]), int(self.led_colors.buf[offset + 2]))
 
-    def on_magnet_pass(self):
+    def on_magnet_pass(self, x):
         self.wait(self.get_rotation_time())
 
         for bar_index in range(self.bars_per_sector):
             led_color = self.get_section_led_color(bar_index)
-            section_height = self.get_section_led_height(self.sector_number)
-
+            section_height = self.get_section_led_height(bar_index)
             self.leds.show_range(0, section_height, led_color, 0)
 
 
@@ -57,6 +57,6 @@ if __name__ == "__main__":
 
     try:
         while True:
-            time.sleep(0.1)
+            time.sleep(0.001)
     except:
         pass  # TODO: Find a way to quit this in a cleaner way

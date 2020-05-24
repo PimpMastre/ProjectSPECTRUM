@@ -4,10 +4,10 @@ import subprocess
 import RPi.GPIO as GPIO
 from timeit import default_timer
 
-from Slave.SharedMemoryManagers.ledColorManager import LedColorManager
-from Slave.SharedMemoryManagers.ledDataManager import LedDataManager
-from Slave.SharedMemoryManagers.rotationTimeManager import RotationTimeManager
-from Slave.Utils.udpRealtimeReceiver import UdpRealtimeReceiver
+from SharedMemoryManagers.ledColorManager import LedColorManager
+from SharedMemoryManagers.ledDataManager import LedDataManager
+from SharedMemoryManagers.rotationTimeManager import RotationTimeManager
+from Utils.udpRealtimeReceiver import UdpRealtimeReceiver
 
 
 class Master:
@@ -22,11 +22,10 @@ class Master:
         self.led_data_manager = LedDataManager()
         self.led_color_manager = LedColorManager()
 
-    def on_magnet_pass(self):
+    def on_magnet_pass(self, x):
         new_stamp = default_timer()
         stamp = new_stamp - self.previous_timestamp
         self.previous_timestamp = new_stamp
-
         self.rotation_time_manager.update_buffer(stamp)
 
     def start_workers(self):
@@ -44,7 +43,7 @@ class Master:
     def start_magnet_detection(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(17, GPIO.BOTH, callback=self.on_magnet_pass)
+        GPIO.add_event_detect(17, GPIO.FALLING, callback=self.on_magnet_pass, bouncetime=1)
 
     def start_loop(self):
         self.start_workers()
@@ -57,7 +56,7 @@ class Master:
         self.led_color_manager.update_buffer((0, 0, 255), 4)
 
         while True:
-            time.sleep(0.01)
+            time.sleep(0.001)
             try:
                 decoded_data = eval(self.udp_receiver.receive_current(512).decode('utf-8'))
                 self.led_data_manager.update_buffer(decoded_data)

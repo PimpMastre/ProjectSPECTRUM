@@ -1,6 +1,6 @@
 import sys
 
-from Slave.master import Master
+from master import Master
 
 if __name__ == "__main__":
     # command line argument

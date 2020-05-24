@@ -10,6 +10,6 @@ class LedColorManager:
         self.shared_buffer.unlink()
 
     def update_buffer(self, color_data, index):
-        self.shared_buffer[index * 3] = color_data[0]
-        self.shared_buffer[index * 3 + 1] = color_data[1]
-        self.shared_buffer[index * 3 + 2] = color_data[2]
+        self.shared_buffer.buf[index * 3] = color_data[0]
+        self.shared_buffer.buf[index * 3 + 1] = color_data[1]
+        self.shared_buffer.buf[index * 3 + 2] = color_data[2]
