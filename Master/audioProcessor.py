@@ -21,8 +21,6 @@ class AudioProcessor:
         :param rp: port of receiver (slave)
         """
         self.connection = udp
-        self.receiver_ip = None
-        self.receiver_port = None
 
         self.spectrum_data = []
         self.processed_data = []
@@ -89,14 +87,14 @@ class AudioProcessor:
             data[i] = data[i] * 100 / self.amplitude_clip
 
         data = str(list(data))
-        self.connection.send(data, self.receiver_ip, self.receiver_port)
+        self.connection.send(data)
 
     def update(self):
         self.process_stream()
         self.transform_stream()
         self.send_data()
 
-    def start(self, interval, destination_ip, destination_port):
+    def start(self, interval):
         """
         Starts the processing and sending thread
         :param interval: the interval at which to process the data
@@ -104,8 +102,6 @@ class AudioProcessor:
         :param destination_port: the port of the slave to which to send the data
         :return: the stop trigger for the processing thread
         """
-        self.receiver_ip = destination_ip
-        self.receiver_port = destination_port
 
         thread = TimerThread(self.update, interval)
         thread.start()

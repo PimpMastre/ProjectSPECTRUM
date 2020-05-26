@@ -16,6 +16,7 @@ class Worker:
 
         self.led_positions = shared_memory.SharedMemory("LedData", False)
         self.led_colors = shared_memory.SharedMemory("LedColors", False)
+        self.led_falloff = shared_memory.SharedMemory("LedFalloff", False)
         self.rotation_time = shared_memory.SharedMemory("RotationTime", False)
 
         GPIO.setmode(GPIO.BCM)
@@ -40,13 +41,17 @@ class Worker:
         offset = ((self.sector_number * self.bars_per_sector) + bar_index) * 3
         return (int(self.led_colors.buf[offset]), int(self.led_colors.buf[offset + 1]), int(self.led_colors.buf[offset + 2]))
 
+    def get_led_falloff_value(self):
+        return int(self.led_falloff.buf[0])
+
     def on_magnet_pass(self, x):
         self.wait(self.get_rotation_time())
 
         for bar_index in range(self.bars_per_sector):
             led_color = self.get_section_led_color(bar_index)
+            led_falloff = self.get_led_falloff_value()
             section_height = self.get_section_led_height(bar_index)
-            self.leds.show_range(0, section_height, led_color, 0)
+            self.leds.show_range(0, section_height, led_color, led_falloff)
 
 
 if __name__ == "__main__":

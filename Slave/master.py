@@ -1,5 +1,5 @@
 import socket
-import time
+from threading import Thread
 import subprocess
 import RPi.GPIO as GPIO
 from timeit import default_timer
@@ -7,20 +7,22 @@ from timeit import default_timer
 from SharedMemoryManagers.ledColorManager import LedColorManager
 from SharedMemoryManagers.ledDataManager import LedDataManager
 from SharedMemoryManagers.rotationTimeManager import RotationTimeManager
-from Utils.udpRealtimeReceiver import UdpRealtimeReceiver
+from SharedMemoryManagers.ledFalloffManager import LedFalloffManager
+
+from Communication.udpRealtimeReceiver import UdpRealtimeReceiverThread
+from Communication.udpSlaveSettingsManager import UdpSlaveSettingsManager
 
 
 class Master:
-    def __init__(self, bind_address, bind_port, thread_count=5):
+    def __init__(self, thread_count=5):
         self.thread_count = thread_count
         self.previous_timestamp = default_timer()
-
-        self.udp_receiver = UdpRealtimeReceiver(bind_address, bind_port)
 
         # shared data managers
         self.rotation_time_manager = RotationTimeManager()
         self.led_data_manager = LedDataManager()
         self.led_color_manager = LedColorManager()
+        self.led_falloff_manager = LedFalloffManager()
 
     def on_magnet_pass(self, x):
         new_stamp = default_timer()
@@ -49,16 +51,19 @@ class Master:
         self.start_workers()
         self.start_magnet_detection()
 
+        # TODO: get these from REST API at init
         self.led_color_manager.update_buffer((255, 0, 0), 0)
         self.led_color_manager.update_buffer((0, 255, 0), 1)
         self.led_color_manager.update_buffer((0, 0, 255), 2)
         self.led_color_manager.update_buffer((255, 255, 255), 3)
         self.led_color_manager.update_buffer((0, 0, 255), 4)
+        self.led_falloff_manager.update_buffer(3)
 
-        while True:
-            time.sleep(0.001)
-            try:
-                decoded_data = eval(self.udp_receiver.receive_current(512).decode('utf-8'))
-                self.led_data_manager.update_buffer(decoded_data)
-            except socket.error as e:
-                pass
+        led_data_thread = UdpRealtimeReceiverThread("192.168.0.69", 6942, self.led_data_manager)
+        led_data_thread.start()
+        settings_manager = UdpSlaveSettingsManager("192.168.0.69", 6943, self.led_color_manager, self.led_falloff_manager)
+
+        try:
+            settings_manager.start_loop()
+        except KeyboardInterrupt:
+            print("Shutting Down...")
