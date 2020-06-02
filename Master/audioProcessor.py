@@ -26,6 +26,7 @@ class AudioProcessor:
         self.processed_data = []
 
         # data transformation parameters
+        self.velocity = 0.8
         self.num_bars = nb
         self.lower_chunk_margin = lcm
         self.higher_chunk_margin = hcm
@@ -75,6 +76,11 @@ class AudioProcessor:
 
             # get average of current section
             section_average = np.average(section)
+            # calculate with velocity
+            distance = section_average - self.prev_peaks[len(self.prev_peaks) - 1][x]
+            section_average = (self.prev_peaks[len(self.prev_peaks) - 1][x] + distance) * self.velocity
+      
+            # amplify
             amplification_value = self.data_amplification * section_average / 100
             current_averages.append(section_average + amplification_value)
             
@@ -85,7 +91,7 @@ class AudioProcessor:
         data = self.processed_data
         for i in range(len(data)):
             data[i] = data[i] * 100 / self.amplitude_clip
-
+        
         data = str(list(data))
         self.connection.send(data)
 

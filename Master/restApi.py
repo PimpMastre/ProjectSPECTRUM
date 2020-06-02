@@ -35,6 +35,7 @@ def update_master_setting(setting_name):
     master_settings.settings[setting_name] = str(request.json['newValue'])
     master_transmitter.send_pair((setting_name, master_settings.settings[setting_name]))
 
+    return ''
 
 '''
     Slave Endpoints

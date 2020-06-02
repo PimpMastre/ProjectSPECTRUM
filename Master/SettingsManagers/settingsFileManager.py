@@ -4,7 +4,7 @@ class SettingsFileManager:
         self.__directory = directory
 
     def get_all_settings(self):
-        file = open(self.__directory + '\\' + self.__filename, "r")
+        file = open(self.__directory + '/' + self.__filename, "r")
         output = dict()
         for line in file.readlines():
             if line != '':
@@ -26,7 +26,7 @@ class SettingsFileManager:
         return None
 
     def save_all(self, settings):
-        file = open(self.__directory + '\\' + self.__filename, "w")
+        file = open(self.__directory + '/' + self.__filename, "w")
         for setting_key in settings:
             file.write(setting_key + "=" + settings[setting_key])
             file.write('\n')
