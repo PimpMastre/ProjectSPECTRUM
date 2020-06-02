@@ -17,7 +17,7 @@ class UdpSlaveSettingsManager:
             for i in range(0, len(color_values), 3):
                 color = (int(color_values[i]), int(color_values[i + 1]), int(color_values[i + 2]))
                 self.__color_data_manager.update_buffer(color, i // 3)
-        elif identifier == 'falloff':
+        elif identifier == 'ledFalloff':
             self.__falloff_data_manager.update_buffer(int(new_value))
 
     def start_loop(self):

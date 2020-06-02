@@ -20,12 +20,14 @@ class LedExtensions:
             self.leds.set_pixel(i, Adafruit_WS2801.RGB_to_color(color[self.__red_index],
                                                                 color[self.__green_index],
                                                                 color[self.__blue_index]))
+            #self.leds.show()
 
-        for i in range(end - falloff, end):
-            color_falloff = 1.0 / falloff * (end - i + 1)
-            self.leds.set_pixel(i, Adafruit_WS2801.RGB_to_color(color[self.__red_index] * color_falloff,
-                                                                color[self.__green_index] * color_falloff,
-                                                                color[self.__blue_index] * color_falloff))
+        for i in range(max(start, end - falloff), end):
+            color_falloff = min(1.0 / (falloff + 1) * (end - i), 1)
+            self.leds.set_pixel(i, Adafruit_WS2801.RGB_to_color(int(color[self.__red_index] * color_falloff),
+                                                                int(color[self.__green_index] * color_falloff),
+                                                                int(color[self.__blue_index] * color_falloff)))
+            #self.leds.show()
 
         for i in range(end, self.led_count):
             self.leds.set_pixel(i, Adafruit_WS2801.RGB_to_color(0, 0, 0))

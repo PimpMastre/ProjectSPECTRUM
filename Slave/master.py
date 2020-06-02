@@ -9,7 +9,7 @@ from SharedMemoryManagers.ledDataManager import LedDataManager
 from SharedMemoryManagers.rotationTimeManager import RotationTimeManager
 from SharedMemoryManagers.ledFalloffManager import LedFalloffManager
 
-from Communication.udpRealtimeReceiver import UdpRealtimeReceiverThread
+from Communication.udpRealtimeReceiverThread import UdpRealtimeReceiverThread
 from Communication.udpSlaveSettingsManager import UdpSlaveSettingsManager
 
 

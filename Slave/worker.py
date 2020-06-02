@@ -35,7 +35,7 @@ class Worker:
 
     def get_section_led_height(self, bar_index):
         led_height_percentage = self.led_positions.buf[(self.sector_number * self.bars_per_sector) + bar_index]
-        return min(self.leds.get_led_count(), int(led_height_percentage * self.leds.get_led_count() / 100))
+        return min(self.leds.get_led_count(), int(max(1, 1 + led_height_percentage * self.leds.get_led_count() / 100)))
 
     def get_section_led_color(self, bar_index):
         offset = ((self.sector_number * self.bars_per_sector) + bar_index) * 3
@@ -62,6 +62,6 @@ if __name__ == "__main__":
 
     try:
         while True:
-            time.sleep(0.001)
+            time.sleep(1)
     except:
         pass  # TODO: Find a way to quit this in a cleaner way
