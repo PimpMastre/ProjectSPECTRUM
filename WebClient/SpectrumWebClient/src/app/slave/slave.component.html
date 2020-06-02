@@ -1,1 +1,24 @@
-<p>slave works!</p>
+<div class="main-window-content">
+        <mat-tab-group>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">palette</mat-icon>
+                    Colors
+                </ng-template>
+                <div class="tab-container">     
+                    <app-color-settings></app-color-settings>
+                </div>
+            </mat-tab>
+    
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">blur_linear</mat-icon>
+                    LED Falloff
+                </ng-template>
+                <div class="tab-container">     
+                    <app-led-falloff></app-led-falloff>
+                </div>
+            </mat-tab>
+
+        </mat-tab-group>
+    </div>

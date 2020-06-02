@@ -1,0 +1,20 @@
+.slider-container {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.slider-field {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.slider-field label {
+    margin-right: 10px;
+}
+
+.slider-field mat-slider {
+    width: 75%;
+}

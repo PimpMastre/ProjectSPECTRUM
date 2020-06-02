@@ -1,0 +1,31 @@
+<div class="small-description-box mat-elevation-z2">
+    Use the double slider below to define the data chunk margins. The processor outputs by default a chunk of data that is 2048 numbers long, and this defines the lower/higher chunk margins. <br>
+    This setting is helpful when you are playing a song that has a lot of lower frequency notes for example: cutting the higher chunk values will "normalize" the bars such that they will all have some data to represent in the wheel.
+</div>
+
+<div class="slider-container">
+    <div class="slider-field">
+        <label>Lower Chunk Margin:</label>
+        <mat-slider
+            thumbLabel
+            tickInterval="16"
+            step="16"
+            min="0"
+            (max)="higherChunkMargin"
+            (change)="onLowerValueChanged($event)">
+        </mat-slider>
+    </div>
+
+    <div class="slider-field">
+        <label>Higher Chunk Margin:</label>
+        <mat-slider
+            thumbLabel
+            tickInterval="16"
+            step="16"
+            min="lowerChunkMargin"
+            max="2048"
+            value="2048"
+            (change)="onHigherValueChanged($event)">
+        </mat-slider>
+    </div>
+</div>
