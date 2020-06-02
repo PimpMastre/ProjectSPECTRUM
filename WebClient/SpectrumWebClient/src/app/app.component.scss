@@ -1,0 +1,36 @@
+.example-container {
+    height: 95vh;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    transition: 300ms ease-in-out;
+    transform: scaleX(1);
+}
+
+.example-sidenav {
+    user-select: none;
+}
+
+.full-width {
+    width: 100%;
+    margin-right: 10px;
+}
+
+.menu-button {
+    transition: 300ms ease-in-out;
+    transform: rotate(0deg);
+}
+
+.menu-button.rotated {
+    transform: rotate(180deg);
+}
+
+.submenu {
+    overflow-y: hidden;
+    transition: transform 300ms ease;
+    transform: scaleY(0);
+    transform-origin: top;
+    padding-left: 30px;
+}
+
+.list-item {
+    margin-right: 50px;
+}
