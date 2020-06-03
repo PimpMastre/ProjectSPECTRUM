@@ -9,7 +9,14 @@ export class NumberOfBarsComponent implements OnInit {
 
   constructor() { }
 
+  public numberOfBars = 5;
+
   ngOnInit(): void {
   }
 
+  onNumberOfBarsChanged(event) {
+    if(event.target.value < 1) {
+      this.numberOfBars = 0;
+    }
+  }
 }

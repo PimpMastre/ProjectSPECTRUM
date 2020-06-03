@@ -9,7 +9,20 @@ export class MotorSpeedComponent implements OnInit {
 
   constructor() { }
 
+  public motorSpeed = 1000;
+
   ngOnInit(): void {
   }
 
+  formatMotorSpeed(newValue) {
+    if(newValue < 1020) {
+      return 'Off';
+    }
+    
+    return newValue;
+  }
+
+  onMotorSpeedChanged(event) {
+
+  }
 }

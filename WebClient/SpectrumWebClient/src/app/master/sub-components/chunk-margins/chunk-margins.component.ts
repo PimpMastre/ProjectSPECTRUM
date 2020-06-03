@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-chunk-margins',
@@ -6,22 +6,44 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./chunk-margins.component.scss']
 })
 export class ChunkMarginsComponent implements OnInit {
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor() { }
 
   lowerChunkMargin = 0;
   higherChunkMargin = 2048;
 
+  @ViewChild('lowerSlider')lowerSlider;
+  @ViewChild('higherSlider')higherSlider;
+
   ngOnInit(): void {
   }
 
-  onLowerValueChanged(event) {
-    console.log(event);
-    this.lowerChunkMargin = event.value;
+  onLowerChunkMarginChanged(event) {
+    if(event.value > this.higherChunkMargin) {
+      this.lowerChunkMargin = this.higherChunkMargin;
+    }
+    else {
+      this.lowerChunkMargin = event.value;
+    }
+
+    this.lowerSlider.value = this.lowerChunkMargin;
   }
 
-  onHigherValueChanged(event) {
-    console.log(event);
-    this.higherChunkMargin = event.value;
-    this.cdr.detectChanges();
+  onHigherChunkMarginChanged(event) {
+    if(event.value < this.lowerChunkMargin) {
+      this.higherChunkMargin = this.lowerChunkMargin;
+    }
+    else {
+      this.higherChunkMargin = event.value;
+    }
+
+    this.higherSlider.value = this.higherChunkMargin;
+  }
+
+  onLowerChunkMarginValueSelected(event) {
+    console.log(this.lowerChunkMargin);
+  }
+
+  onHigherChunkMarginValueSelected(event) {
+    console.log(this.higherChunkMargin);
   }
 }

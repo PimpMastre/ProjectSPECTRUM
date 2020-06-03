@@ -23,6 +23,12 @@ import { MotorSpeedComponent } from './master/sub-components/motor-speed/motor-s
 import { ColorSettingsComponent } from './slave/sub-components/color-settings/color-settings.component';
 import { LedFalloffComponent } from './slave/sub-components/led-falloff/led-falloff.component';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatRadioModule } from '@angular/material/radio';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { ChartsModule } from 'ng2-charts';
+import { ColorSketchModule } from 'ngx-color/sketch';
+import { LedBrightnessComponent } from './slave/sub-components/led-brightness/led-brightness.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +43,7 @@ import { MatSliderModule } from '@angular/material/slider';
     MotorSpeedComponent,
     ColorSettingsComponent,
     LedFalloffComponent,
+    LedBrightnessComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,7 +57,13 @@ import { MatSliderModule } from '@angular/material/slider';
     MatToolbarModule,
     MatButtonModule,
     MatTabsModule,
-    MatSliderModule
+    MatSliderModule,
+    MatRadioModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ChartsModule,
+    ColorSketchModule
   ],
   providers: [],
   bootstrap: [AppComponent]

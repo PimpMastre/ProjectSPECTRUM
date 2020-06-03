@@ -2,3 +2,21 @@
     Amplitude clip is the threshold at which the bar will be represented as maximum (100%). By default, this value is 1.000.000, which gives the best results across a wide range of music genres. <br>
     The Data Amplification controls how much the output data should be amplified. Note that this amplification is not reflected in the output audio, just in the bar data that is sent to the slave.
 </div>
+
+<div class="slider-container amplitude-slider">
+    <div class="slider-field">
+        <label>Amplitude:</label>
+        <mat-slider
+            color="primary"
+            thumbLabel
+            min="0"
+            max="2000000"
+            tickInterval="100"
+            step="1000"
+            [displayWith]="formatAmplitude"
+            [(value)]="amplitude"
+            (input)="onAmplitudeChanged($event)">
+        </mat-slider>
+    </div>
+    Value: {{amplitude}}
+</div>

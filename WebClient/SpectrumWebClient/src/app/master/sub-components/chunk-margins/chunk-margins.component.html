@@ -7,25 +7,32 @@
     <div class="slider-field">
         <label>Lower Chunk Margin:</label>
         <mat-slider
+            #lowerSlider
+            color="primary"
             thumbLabel
             tickInterval="16"
             step="16"
             min="0"
-            (max)="higherChunkMargin"
-            (change)="onLowerValueChanged($event)">
+            max="2048"
+            [(value)]="lowerChunkMargin"
+            (input)="onLowerChunkMarginChanged($event)"
+            (change)="onLowerChunkMarginValueSelected($event)">
         </mat-slider>
     </div>
 
     <div class="slider-field">
         <label>Higher Chunk Margin:</label>
         <mat-slider
+            #higherSlider
+            color="primary"
             thumbLabel
             tickInterval="16"
             step="16"
-            min="lowerChunkMargin"
+            min="0"
             max="2048"
-            value="2048"
-            (change)="onHigherValueChanged($event)">
+            [(value)]="higherChunkMargin"
+            (input)="onHigherChunkMarginChanged($event)"
+            (change)="onHigherChunkMarginValueSelected($event)">
         </mat-slider>
     </div>
 </div>

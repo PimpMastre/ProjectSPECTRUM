@@ -8,8 +8,14 @@ import { Component, OnInit } from '@angular/core';
 export class MappingStylesComponent implements OnInit {
 
   constructor() { }
+  public mappingStyles = ['Linear Space', 'Geometric Space']
+  public selectedMappingStyle = this.mappingStyles[0];
 
   ngOnInit(): void {
+  }
+
+  onStyleChanged(event) {
+    
   }
 
 }

@@ -6,14 +6,18 @@
     <mat-sidenav-container class="example-container" autosize>
         <mat-sidenav #sidenav class="example-sidenav" mode="side" opened="true" (mouseenter)="mouseenter()" (mouseleave)="mouseleave()">
             <mat-nav-list>
-                <mat-list-item class="parent" [routerLink]="['master']">
+                <mat-list-item class="parent" [routerLink]="['master']" [routerLinkActive]="['navigation-active']">
                     <span class="full-width" *ngIf="isExpanded || isShowing">Master Settings</span>
                     <mat-icon mat-list-icon>graphic_eq</mat-icon>
                 </mat-list-item>
-                <mat-list-item class="parent" [routerLink]="['slave']">
-                        <span class="full-width" *ngIf="isExpanded || isShowing">Slave Settings</span>
-                        <mat-icon mat-list-icon>track_changes</mat-icon>
-                    </mat-list-item>
+                <mat-list-item class="parent" [routerLink]="['slave']" [routerLinkActive]="['navigation-active']">
+                    <span class="full-width" *ngIf="isExpanded || isShowing">Slave Settings</span>
+                    <mat-icon mat-list-icon>track_changes</mat-icon>
+                </mat-list-item>
+                <mat-list-item class="parent" (click)="saveAllSettingsClicked($event)">
+                    <span class="full-width" *ngIf="isExpanded || isShowing">Save All Settings</span>
+                    <mat-icon mat-list-icon>save_alt</mat-icon>
+                </mat-list-item>
             </mat-nav-list>
         </mat-sidenav>
 

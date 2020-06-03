@@ -1,0 +1,18 @@
+<div class="small-description-box mat-elevation-z2">
+    This page controls the overall LED brightness across all sectors. <br>
+</div>
+
+<div class="slider-container brightness-slider">
+    <div class="slider-field">
+        <label>Brightness:</label>
+        <mat-slider
+            color="primary"
+            thumbLabel
+            min="0"
+            max="100"
+            [displayWith]="formatBrightness"
+            [(value)]="brightness"
+            (change)="onBrightnessChanged($event)">
+        </mat-slider>
+    </div>
+</div>

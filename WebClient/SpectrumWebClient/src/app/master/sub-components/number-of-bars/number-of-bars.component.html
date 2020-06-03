@@ -1,3 +1,9 @@
 <div class="small-description-box mat-elevation-z2">
     This setting controls the number of bars that the data analysis algorithm should generate. This number should be greater or equal to the number of sectors on the wheel, but keep in mind that the wheel maps the first n values from these bars, where n is the number of sectors available.
 </div>
+
+<input matInput type="number">
+
+<mat-form-field>
+    <input matInput type="number" [(ngModel)]="numberOfBars" placeholder="Number of Bars" (change)="onNumberOfBarsChanged($event)">
+</mat-form-field>

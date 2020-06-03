@@ -9,7 +9,14 @@ export class LedFalloffComponent implements OnInit {
 
   constructor() { }
 
+  ledFalloff = 0;
+
   ngOnInit(): void {
   }
 
+  onFalloffChanged(event) {
+    if(event.target.value < 0) {
+      this.ledFalloff = 0;
+    }
+  }
 }

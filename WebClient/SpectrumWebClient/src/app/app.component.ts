@@ -20,4 +20,8 @@ export class AppComponent {
       this.isShowing = false;
     }
   }
+
+  saveAllSettingsClicked($event) {
+    console.log('ye');
+  }
 }

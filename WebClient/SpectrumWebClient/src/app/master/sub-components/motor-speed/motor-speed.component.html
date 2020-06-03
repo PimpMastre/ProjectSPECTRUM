@@ -1,3 +1,21 @@
 <div class="small-description-box mat-elevation-z2">
-    Use the slider below to control the motor speed. The motor starts at ~1100 units and can go up to 1300, but values greater than that can damage the motor. <br><b>Use with caution.</b>
+    Use the slider below to control the motor speed. The motor starts at ~1020 units and can go up to 1300, but values greater than that can damage the motor. <br><b>Use with caution.</b>
+</div>
+
+
+<div class="slider-container velocity-slider">
+    <div class="slider-field">
+        <label>Motor Speed:</label>
+        <mat-slider
+            color="primary"
+            thumbLabel
+            min="1010"
+            max="1300"
+            tickInterval="9"
+            step="10"
+            [displayWith]="formatMotorSpeed"
+            [(value)]="motorSpeed"
+            (change)="onMotorSpeedChanged($event)">
+        </mat-slider>
+    </div>
 </div>
