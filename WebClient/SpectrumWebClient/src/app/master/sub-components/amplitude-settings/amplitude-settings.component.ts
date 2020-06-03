@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MasterService } from '../../service/master.service';
 
 @Component({
   selector: 'app-amplitude-settings',
@@ -7,19 +8,32 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AmplitudeSettingsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private masterService: MasterService) { }
 
-  public amplitude = 1000000;
+  public amplitudeClip = 1000000;
+  public dataAmplification = 0;
 
   ngOnInit(): void {
+    this.amplitudeClip = this.masterService.settings['amplitudeClip'];
+    this.dataAmplification = this.masterService.settings['dataAmplification'];
   }
 
-  formatAmplitude(value) {
+  formatAmplitudeClip(value) {
     return (value / 1000000).toFixed(2) + 'M';
   }
 
-  onAmplitudeChanged(event) {
-    this.amplitude = event.value;
-    this.amplitude = Math.floor(this.amplitude / 1000) * 1000;
+  formatDataAmplification(value) {
+    return value + "%";
+  }
+
+  onDataAmplificationChanged(event) {
+    this.dataAmplification = event.value;
+  }
+
+  onAmplitudeClipChanged(event) {
+    this.amplitudeClip = event.value;
+    this.amplitudeClip = Math.floor(this.amplitudeClip / 1000) * 1000;
+
+    this.masterService.updateAmplitudeClip(this.amplitudeClip);
   }
 }

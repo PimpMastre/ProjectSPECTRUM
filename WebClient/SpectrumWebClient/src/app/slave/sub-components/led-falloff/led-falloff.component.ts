@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SlaveService } from '../../service/slave.service';
 
 @Component({
   selector: 'app-led-falloff',
@@ -7,16 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LedFalloffComponent implements OnInit {
 
-  constructor() { }
+  constructor(private slaveService: SlaveService) { }
 
   ledFalloff = 0;
 
   ngOnInit(): void {
+    this.ledFalloff = this.slaveService.settings['ledFalloff'];
   }
 
   onFalloffChanged(event) {
     if(event.target.value < 0) {
       this.ledFalloff = 0;
     }
+
+    this.slaveService.updateLedFalloff(this.ledFalloff);
   }
 }

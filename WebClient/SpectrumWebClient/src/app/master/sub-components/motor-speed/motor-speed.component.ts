@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MasterService } from '../../service/master.service';
 
 @Component({
   selector: 'app-motor-speed',
@@ -7,11 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MotorSpeedComponent implements OnInit {
 
-  constructor() { }
+  constructor(private masterService: MasterService) { }
 
   public motorSpeed = 1000;
 
   ngOnInit(): void {
+    this.motorSpeed = this.masterService.settings['motorSpeed'];
   }
 
   formatMotorSpeed(newValue) {
@@ -23,6 +25,6 @@ export class MotorSpeedComponent implements OnInit {
   }
 
   onMotorSpeedChanged(event) {
-
+    this.masterService.updateMotorSpeed(this.motorSpeed);
   }
 }

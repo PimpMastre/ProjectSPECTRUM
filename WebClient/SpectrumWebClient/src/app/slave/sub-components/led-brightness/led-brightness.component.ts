@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SlaveService } from '../../service/slave.service';
 
 @Component({
   selector: 'app-led-brightness',
@@ -7,11 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LedBrightnessComponent implements OnInit {
 
-  constructor() { }
+  constructor(private slaveService: SlaveService) { }
 
   public brightness = 100;
 
   ngOnInit(): void {
+    this.brightness = this.slaveService.settings['brightness'] * 100;
   }
 
   formatBrightness(newValue) {
@@ -19,6 +21,6 @@ export class LedBrightnessComponent implements OnInit {
   }
 
   onBrightnessChanged(event) {
-    console.log(event);
+    this.slaveService.updateBrightness(this.brightness / 100);
   }
 }

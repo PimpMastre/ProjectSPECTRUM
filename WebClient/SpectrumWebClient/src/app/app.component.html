@@ -1,4 +1,15 @@
 <div class="mat-app-background basic-container">
+
+    <div class='progress-spinner-background' *ngIf="isConnecting" @inOutAnimation>
+        <div class="progress-spinner-center">
+            <mat-spinner diameter="75" style="margin-bottom: 16px;"></mat-spinner>
+            Connecting to Master API...
+            <div *ngIf="connectionError">
+                Connection to the API failed. Please refresh this page to try again.
+            </div>
+        </div>
+    </div>
+
     <mat-toolbar color="primary" class="example-toolbar">
         <button mat-icon-button (click)="isExpanded = !isExpanded"><mat-icon>menu</mat-icon></button>
         <h1 class="example-app-name">Project: SPECTRUM Dashboard</h1>
@@ -20,7 +31,7 @@
                 </mat-list-item>
             </mat-nav-list>
         </mat-sidenav>
-
+        
         <router-outlet></router-outlet>
     </mat-sidenav-container>            
 </div>  

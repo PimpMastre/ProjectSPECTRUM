@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { MasterService } from '../../service/master.service';
 
 @Component({
   selector: 'app-chunk-margins',
@@ -6,7 +7,7 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
   styleUrls: ['./chunk-margins.component.scss']
 })
 export class ChunkMarginsComponent implements OnInit {
-  constructor() { }
+  constructor(private masterService: MasterService) { }
 
   lowerChunkMargin = 0;
   higherChunkMargin = 2048;
@@ -15,6 +16,8 @@ export class ChunkMarginsComponent implements OnInit {
   @ViewChild('higherSlider')higherSlider;
 
   ngOnInit(): void {
+    this.lowerChunkMargin = this.masterService.settings['lowerChunkMargin'];
+    this.higherChunkMargin = this.masterService.settings['higherChunkMargin'];
   }
 
   onLowerChunkMarginChanged(event) {
@@ -40,10 +43,10 @@ export class ChunkMarginsComponent implements OnInit {
   }
 
   onLowerChunkMarginValueSelected(event) {
-    console.log(this.lowerChunkMargin);
+    this.masterService.updateLowerChunkMargin(this.lowerChunkMargin);
   }
 
   onHigherChunkMarginValueSelected(event) {
-    console.log(this.higherChunkMargin);
+    this.masterService.updateHigherChunkMargin(this.higherChunkMargin);
   }
 }

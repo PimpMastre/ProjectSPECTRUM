@@ -10,7 +10,6 @@
             #sectionChart
             baseChart 
             [data]="pieChartData" 
-            [labels]="pieChartLabels" 
             [chartType]="pieChartType"
             [colors]="pieChartColors"
             [options]="pieChartOptions"
@@ -25,7 +24,7 @@
     </div>
 
     <div class="color-picker" *ngIf="activeSection !== null" @inOutAnimation>
-        <color-sketch [(color)]="currentColor" (onChangeComplete)="changeComplete($event)"></color-sketch>
+        <color-sketch [(color)]="currentColor" (onChangeComplete)="colorChangeComplete($event)"></color-sketch>
     </div>
 </div>
       

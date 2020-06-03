@@ -13,10 +13,25 @@
             max="2000000"
             tickInterval="100"
             step="1000"
-            [displayWith]="formatAmplitude"
-            [(value)]="amplitude"
-            (input)="onAmplitudeChanged($event)">
+            [displayWith]="formatAmplitudeClip"
+            [(value)]="amplitudeClip"
+            (input)="onAmplitudeClipChanged($event)">
+        </mat-slider>
+        {{amplitudeClip}}
+    </div>
+
+    <div class="slider-field">
+        <label>Data Amplification:</label>
+        <mat-slider
+            color="primary"
+            thumbLabel
+            min="0"
+            max="999"
+            tickInterval="100"
+            step="1"
+            [displayWith]="formatDataAmplification"
+            [(value)]="dataAmplification"
+            (input)="onDataAmplificationChanged($event)">
         </mat-slider>
     </div>
-    Value: {{amplitude}}
 </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MasterService } from '../../service/master.service';
 
 @Component({
   selector: 'app-buffers',
@@ -7,23 +8,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BuffersComponent implements OnInit {
 
-  constructor() { }
+  constructor(private masterService: MasterService) { }
 
   public bufferLength = 2;
   public velocity = 33;
 
   ngOnInit(): void {
-
+    this.bufferLength = this.masterService.settings['previousPeaksBufferLength'];
+    this.velocity = this.masterService.settings['velocity'];
   }
 
   onBufferLengthChanged(event) {
     if(event.target.value < 0) {
       this.bufferLength = 0;
     }
+
+    this.masterService.updateBufferLength(this.bufferLength);
   }
 
   onVelocityChanged(event) {
-    console.log(this.velocity / 100);
+    this.masterService.updateVelocity(this.velocity / 100);
   }
 
   formatVelocity(value) {

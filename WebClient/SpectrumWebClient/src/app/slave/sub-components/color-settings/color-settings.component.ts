@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartOptions, ChartType } from 'chart.js';
 import { Label, SingleDataSet, BaseChartDirective } from 'ng2-charts';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { SlaveService } from '../../service/slave.service';
+import { MasterService } from 'src/app/master/service/master.service';
 
 @Component({
   selector: 'app-color-settings',
@@ -33,7 +35,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 })
 export class ColorSettingsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private slaveService: SlaveService, private masterService: MasterService) { }
 
   @ViewChild(BaseChartDirective)
   public chart: BaseChartDirective;
@@ -44,7 +46,6 @@ export class ColorSettingsComponent implements OnInit {
       enabled: false
     }
   };
-  public pieChartLabels: Label[] = []
   public pieChartData: SingleDataSet = [];
   public pieChartColors: Array<any> = [{backgroundColor: []}];
   public pieChartType: ChartType = 'pie';
@@ -53,12 +54,16 @@ export class ColorSettingsComponent implements OnInit {
   public currentColor;
 
   ngOnInit(): void {
-    var total = 5;
-    for(var i = 0; i < total; ++i) {
-      this.pieChartLabels.push("Section " + i);
+    var numberOfBars = this.masterService.settings['numberOfBars'];
+    var colors = this.slaveService.settings['colors'];
+    for(var i = 0; i < numberOfBars; ++i) {
       this.pieChartData.push(1);
-      this.pieChartColors[0].backgroundColor.push('#000000');
+      this.pieChartColors[0].backgroundColor.push(this.rgbToHex([colors[3 * i], colors[3 * i + 1], colors[3 * i + 2]]));
     }
+  }
+
+  private rgbToHex(rgb) {
+    return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
   }
 
   onSectionClicked(event) {
@@ -94,8 +99,10 @@ export class ColorSettingsComponent implements OnInit {
     this.chart.chart.update();
   }
 
-  changeComplete(event) {
+  colorChangeComplete(event) {
     this.pieChartColors[0].backgroundColor[this.activeSection] = event.color.hex;
     this.chart.chart.update();
+    
+    this.slaveService.updateColors(this.activeSection, event.color.rgb);
   }
 }

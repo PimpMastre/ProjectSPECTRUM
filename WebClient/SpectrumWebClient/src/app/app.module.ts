@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http'
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -29,6 +30,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ChartsModule } from 'ng2-charts';
 import { ColorSketchModule } from 'ngx-color/sketch';
 import { LedBrightnessComponent } from './slave/sub-components/led-brightness/led-brightness.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -47,6 +49,7 @@ import { LedBrightnessComponent } from './slave/sub-components/led-brightness/le
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatSidenavModule,
@@ -63,7 +66,8 @@ import { LedBrightnessComponent } from './slave/sub-components/led-brightness/le
     FormsModule,
     ReactiveFormsModule,
     ChartsModule,
-    ColorSketchModule
+    ColorSketchModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
