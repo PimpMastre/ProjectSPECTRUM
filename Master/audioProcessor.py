@@ -10,7 +10,7 @@ class AudioProcessor:
         :param lcm: lower range chunk cut, cuts the lower ranges by fcl percent
         :param hcm: higher range chunk cut, cuts the higher ranges by fch percent
         :param ac: amplitude clip, clips the amplitude values
-        :param ms: mapping style, 0 = geomspace, 1 = linspace
+        :param ms: mapping style, 0 = linspace, 1 = geomspace
         :param da: data amplification, amplifies results by da percent
         :param ppbl: previous peaks buffer length, which averages current data with previous data
         :param ch: number of channels
@@ -63,7 +63,7 @@ class AudioProcessor:
     def transform_stream(self):
         # TODO: ADD EQUALIZER
         plot_points = []
-        if self.mapping_style == 0:
+        if self.mapping_style == 1:
             plot_points = np.geomspace(self.lower_chunk_margin, self.higher_chunk_margin, num=self.num_bars + 1)
         else:
             plot_points = np.linspace(self.lower_chunk_margin, self.higher_chunk_margin, num=self.num_bars + 1)
