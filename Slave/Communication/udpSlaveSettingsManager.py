@@ -2,11 +2,12 @@ import socket
 
 
 class UdpSlaveSettingsManager:
-    def __init__(self, bind_ip, bind_port, color_data_manager, falloff_data_manager):
+    def __init__(self, bind_ip, bind_port, color_data_manager, falloff_data_manager, brightness_data_manager):
         self.__bind_ip = bind_ip
         self.__bind_port = bind_port
         self.__color_data_manager = color_data_manager
         self.__falloff_data_manager = falloff_data_manager
+        self.__brightness_data_manager = brightness_data_manager
 
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.__socket.bind((self.__bind_ip, self.__bind_port))
@@ -19,6 +20,8 @@ class UdpSlaveSettingsManager:
                 self.__color_data_manager.update_buffer(color, i // 3)
         elif identifier == 'ledFalloff':
             self.__falloff_data_manager.update_buffer(int(new_value))
+        elif identifier == 'brightness':
+            self.__brightness_data_manager.update_brightness(float(new_value))
 
     def start_loop(self):
         while True:
