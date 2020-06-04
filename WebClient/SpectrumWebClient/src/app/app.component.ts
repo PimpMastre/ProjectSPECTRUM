@@ -48,7 +48,7 @@ export class AppComponent implements OnInit{
       this.connectionError = false;
 
       this.masterService.getAllSettings();
-      this.slaveService.getAllSettings();
+      this.slaveService.getAllSettings(); 
     },
     error => {
       this.isConnecting = true;

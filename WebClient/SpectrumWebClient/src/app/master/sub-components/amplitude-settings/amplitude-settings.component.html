@@ -15,7 +15,7 @@
             step="1000"
             [displayWith]="formatAmplitudeClip"
             [(value)]="amplitudeClip"
-            (input)="onAmplitudeClipChanged($event)">
+            (change)="onAmplitudeClipChanged($event)">
         </mat-slider>
         {{amplitudeClip}}
     </div>
@@ -31,7 +31,7 @@
             step="1"
             [displayWith]="formatDataAmplification"
             [(value)]="dataAmplification"
-            (input)="onDataAmplificationChanged($event)">
+            (change)="onDataAmplificationChanged($event)">
         </mat-slider>
     </div>
 </div>

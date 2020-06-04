@@ -1,7 +1,9 @@
 numberOfBars=5
 lowerChunkMargin=0
 higherChunkMargin=512
-amplitudeClip=4
+amplitudeClip=1000000
 mappingStyle=0
 dataAmplification=250
 previousPeaksBufferLength=2
+velocity=33
+motorSpeed=1000

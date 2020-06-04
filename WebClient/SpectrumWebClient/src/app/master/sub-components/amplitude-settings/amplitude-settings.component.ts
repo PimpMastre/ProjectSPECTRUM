@@ -28,6 +28,8 @@ export class AmplitudeSettingsComponent implements OnInit {
 
   onDataAmplificationChanged(event) {
     this.dataAmplification = event.value;
+
+    this.masterService.updateDataAmplification(this.dataAmplification);
   }
 
   onAmplitudeClipChanged(event) {

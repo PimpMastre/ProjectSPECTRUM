@@ -26,6 +26,8 @@ class UdpAudioSettingsManager:
         elif identifier == 'previousPeaksBufferLength':
             self.__audio_processor.prev_peaks_buffer_length = int(new_value)
             self.__audio_processor.prev_peaks = [[0 for x in range(self.__audio_processor.num_bars)] for y in range(self.__audio_processor.prev_peaks_buffer_length)]
+        elif identifier == 'velocity':
+            self.__audio_processor.velocity = float(new_value)
 
     def start_loop(self):
         while True:

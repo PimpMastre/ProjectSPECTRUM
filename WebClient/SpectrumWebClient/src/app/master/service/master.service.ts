@@ -39,60 +39,60 @@ export class MasterService {
   }
 
   public saveAllSettings() {
-    this.httpClient.get(this.saveAllSettingsUrl);
+    this.httpClient.get(this.saveAllSettingsUrl).toPromise();
   }
 
   public updateLowerChunkMargin(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
-    this.httpClient.post(this.updateLowerChunkMarginUrl, params, options);
+    this.httpClient.post(this.updateLowerChunkMarginUrl, params, options).subscribe(result => this.getAllSettings());
   }
 
   public updateHigherChunkMargin(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
-    this.httpClient.post(this.updateHigherChunkMarginUrl, params, options);
+    this.httpClient.post(this.updateHigherChunkMarginUrl, params, options).subscribe(result => this.getAllSettings());
   }
 
   public updateDataAmplification(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
-    this.httpClient.post(this.updateDataAmplificationUrl, params, options);
+    this.httpClient.post(this.updateDataAmplificationUrl, params, options).subscribe(result => this.getAllSettings());
   }
 
   public updateAmplitudeClip(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
-    this.httpClient.post(this.updateAmplitudeClipUrl, params, options);
+    this.httpClient.post(this.updateAmplitudeClipUrl, params, options).subscribe(result => this.getAllSettings());
   }
 
   public updateBufferLength(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
-    this.httpClient.post(this.updateBufferLengthUrl, params, options);
+    this.httpClient.post(this.updateBufferLengthUrl, params, options).subscribe(result => this.getAllSettings());
   }
 
   public updateVelocity(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
-    this.httpClient.post(this.updateVelocityUrl, params, options);
+    this.httpClient.post(this.updateVelocityUrl, params, options).subscribe(result => this.getAllSettings());
   }
 
   public updateMappingStyle(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
-    this.httpClient.post(this.updateMappingStyleUrl, params, options);
+    this.httpClient.post(this.updateMappingStyleUrl, params, options).subscribe(result => this.getAllSettings());
   }
 
   public updateNumberOfBars(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
-    this.httpClient.post(this.updateNumberOfBarsUrl, params, options);
+    this.httpClient.post(this.updateNumberOfBarsUrl, params, options).subscribe(result => this.getAllSettings());
   }
 
   public updateMotorSpeed(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
-    this.httpClient.post(this.updateMotorSpeedUrl, params, options);
+    this.httpClient.post(this.updateMotorSpeedUrl, params, options).subscribe(result => this.getAllSettings());
   }
 }

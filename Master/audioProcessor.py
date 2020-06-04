@@ -4,7 +4,7 @@ from Utils.timerThread import TimerThread
 
 
 class AudioProcessor:
-    def __init__(self, nb=5, lcm=20, hcm=1024, ac=1000000, ms=0, da=200, ppbl=2, ch=2, rate=44100, chunksz=2048, udp=None):
+    def __init__(self, nb=5, lcm=20, hcm=1024, ac=1000000, ms=0, da=200, ppbl=2, ch=2, rate=44100, chunksz=2048, vel=0.33, udp=None):
         """
         :param nb: number of bars to interpret data with
         :param lcm: lower range chunk cut, cuts the lower ranges by fcl percent
@@ -26,7 +26,7 @@ class AudioProcessor:
         self.processed_data = []
 
         # data transformation parameters
-        self.velocity = 0.8
+        self.velocity = vel
         self.num_bars = nb
         self.lower_chunk_margin = lcm
         self.higher_chunk_margin = hcm

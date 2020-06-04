@@ -1,5 +1,4 @@
-import socket
-from threading import Thread
+import requests
 import subprocess
 import RPi.GPIO as GPIO
 from timeit import default_timer
@@ -8,6 +7,7 @@ from SharedMemoryManagers.ledColorManager import LedColorManager
 from SharedMemoryManagers.ledDataManager import LedDataManager
 from SharedMemoryManagers.rotationTimeManager import RotationTimeManager
 from SharedMemoryManagers.ledFalloffManager import LedFalloffManager
+from SharedMemoryManagers.ledFalloffManager import LedBrightnessManager
 
 from Communication.udpRealtimeReceiverThread import UdpRealtimeReceiverThread
 from Communication.udpSlaveSettingsManager import UdpSlaveSettingsManager
@@ -23,6 +23,7 @@ class Master:
         self.led_data_manager = LedDataManager()
         self.led_color_manager = LedColorManager()
         self.led_falloff_manager = LedFalloffManager()
+        self.led_brightness_manager = LedBrightnessManager()
 
     def on_magnet_pass(self, x):
         new_stamp = default_timer()
@@ -51,17 +52,20 @@ class Master:
         self.start_workers()
         self.start_magnet_detection()
 
-        # TODO: get these from REST API at init
-        self.led_color_manager.update_buffer((255, 0, 0), 0)
-        self.led_color_manager.update_buffer((0, 255, 0), 1)
-        self.led_color_manager.update_buffer((0, 0, 255), 2)
-        self.led_color_manager.update_buffer((255, 255, 255), 3)
-        self.led_color_manager.update_buffer((0, 0, 255), 4)
-        self.led_falloff_manager.update_buffer(3)
+        api_data = requests.get("http://192.168.0.70/master/getAll")
+        api_colors = api_data.json()['colors'].split(',')
+        for i in range(len(api_colors) // 3):
+            red = api_colors[i * 3]
+            green = api_colors[i * 3 + 1]
+            blue = api_colors[i * 3 + 2]
+            self.led_color_manager.update_buffer((red, green, blue), i)
+
+        self.led_falloff_manager.update_buffer(int(api_data.json()['ledFalloff']))
+        self.led_brightness_manager.update_brightness(float(api_data.json()['brightness']))
 
         led_data_thread = UdpRealtimeReceiverThread("192.168.0.69", 6942, self.led_data_manager)
         led_data_thread.start()
-        settings_manager = UdpSlaveSettingsManager("192.168.0.69", 6943, self.led_color_manager, self.led_falloff_manager)
+        settings_manager = UdpSlaveSettingsManager("192.168.0.69", 6943, self.led_color_manager, self.led_falloff_manager, self.led_brightness_manager)
 
         try:
             settings_manager.start_loop()

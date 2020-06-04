@@ -33,18 +33,18 @@ export class SlaveService {
   public updateLedFalloff(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
-    this.httpClient.post(this.updateLedFalloffUrl, params, options);
+    this.httpClient.post(this.updateLedFalloffUrl, params, options).subscribe(result => this.getAllSettings());
   }
 
   public updateBrightness(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
-    this.httpClient.post(this.updateBrightnessUrl, params, options);
+    this.httpClient.post(this.updateBrightnessUrl, params, options).subscribe(result => this.getAllSettings());
   }
 
   public updateColors(index, newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildColorParams(newValue);
-    this.httpClient.post(this.updateColorsUrl + index, params, options);
+    this.httpClient.post(this.updateColorsUrl + index, params, options).subscribe(result => this.getAllSettings());
   }
 }
