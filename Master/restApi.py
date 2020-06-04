@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, abort
+from flask_cors import CORS
 import atexit
 
 from Model.serializableSettings import SerializableSettings
@@ -6,6 +7,7 @@ from SettingsManagers.settingsFileManager import SettingsFileManager
 from Communication.udpTransmitter import UdpTransmitter
 
 app = Flask(__name__)
+cors = CORS(app)
 master_settings_manager = SettingsFileManager('Data', 'master.config')
 master_settings = SerializableSettings(master_settings_manager.get_all_settings())
 master_transmitter = UdpTransmitter('192.168.0.70', 6943)
