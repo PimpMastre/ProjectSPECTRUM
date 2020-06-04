@@ -6,9 +6,11 @@
                 <mat-icon class="example-tab-icon">speed</mat-icon>
                 Motor Speed
             </ng-template>
-            <div class="tab-container">
-                <app-motor-speed></app-motor-speed>
-            </div>
+            <ng-template matTabContent>
+                <div class="tab-container">
+                    <app-motor-speed></app-motor-speed>
+                </div>
+            </ng-template>
         </mat-tab>
 
         <mat-tab>
@@ -16,9 +18,11 @@
                 <mat-icon class="example-tab-icon">compare_arrows</mat-icon>
                 Chunk Margins
             </ng-template>
-            <div class="tab-container">     
-                <app-chunk-margins></app-chunk-margins>
-            </div>
+            <ng-template matTabContent>
+                <div class="tab-container">     
+                    <app-chunk-margins></app-chunk-margins>
+                </div>
+            </ng-template>
         </mat-tab>
 
         <mat-tab>
@@ -26,9 +30,11 @@
                 <mat-icon class="example-tab-icon">category</mat-icon>
                 Mapping Styles
             </ng-template>
-            <div class="tab-container">     
-                <app-mapping-styles></app-mapping-styles>
-            </div>
+            <ng-template matTabContent>
+                <div class="tab-container">     
+                    <app-mapping-styles></app-mapping-styles>
+                </div>
+            </ng-template>
         </mat-tab>
 
         <mat-tab>
@@ -36,9 +42,11 @@
                 <mat-icon class="example-tab-icon">equalizer</mat-icon>
                 Number Of Bars
             </ng-template>
-            <div class="tab-container">     
-                <app-number-of-bars></app-number-of-bars>
-            </div>
+            <ng-template matTabContent>
+                <div class="tab-container">     
+                    <app-number-of-bars></app-number-of-bars>
+                </div>
+            </ng-template>
         </mat-tab>
 
         <mat-tab>
@@ -46,9 +54,11 @@
                 <mat-icon class="example-tab-icon">mediation</mat-icon>
                 Averaging
             </ng-template>
-            <div class="tab-container">
-                <app-buffers></app-buffers>
-            </div>
+            <ng-template matTabContent>
+                <div class="tab-container">
+                    <app-buffers></app-buffers>
+                </div>
+            </ng-template>
         </mat-tab>
 
         <mat-tab>
@@ -56,9 +66,11 @@
                 <mat-icon class="example-tab-icon">volume_up</mat-icon>
                 Amplitude
             </ng-template>
-            <div class="tab-container">
-                <app-amplitude-settings></app-amplitude-settings>
-            </div>
+            <ng-template matTabContent>
+                <div class="tab-container">
+                    <app-amplitude-settings></app-amplitude-settings>
+                </div>
+            </ng-template>
         </mat-tab>
 
     </mat-tab-group>

@@ -55,7 +55,7 @@ export class ColorSettingsComponent implements OnInit {
 
   ngOnInit(): void {
     var numberOfBars = this.masterService.settings['numberOfBars'];
-    var colors = this.slaveService.settings['colors'];
+    var colors = this.slaveService.settings['colors'].split(",");
     for(var i = 0; i < numberOfBars; ++i) {
       this.pieChartData.push(1);
       this.pieChartColors[0].backgroundColor.push(this.rgbToHex([colors[3 * i], colors[3 * i + 1], colors[3 * i + 2]]));
@@ -63,7 +63,8 @@ export class ColorSettingsComponent implements OnInit {
   }
 
   private rgbToHex(rgb) {
-    return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
+      var rez = rgb[2] | (rgb[1] << 8) | (rgb[0] << 16);
+      return '#' + (0x1000000 + rez).toString(16).slice(1)
   }
 
   onSectionClicked(event) {
@@ -87,12 +88,12 @@ export class ColorSettingsComponent implements OnInit {
 
   highlightChartSection() {
     var newChartData: SingleDataSet = [];
-    for(var i = 0; i < 5; ++i) {
+    for(var i = 0; i < this.masterService.settings['numberOfBars']; ++i) {
       if(i != this.activeSection) {
         newChartData.push(1)
       }
       else {
-        newChartData.push(4);
+        newChartData.push(this.masterService.settings['numberOfBars'] - 1);
       }
     }
     this.pieChartData = newChartData;

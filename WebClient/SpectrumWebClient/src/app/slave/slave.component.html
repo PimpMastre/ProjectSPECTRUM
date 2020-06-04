@@ -5,9 +5,11 @@
                     <mat-icon class="example-tab-icon">palette</mat-icon>
                     Colors
                 </ng-template>
-                <div class="tab-container">     
-                    <app-color-settings></app-color-settings>
-                </div>
+                <ng-template matTabContent>
+                    <div class="tab-container">     
+                        <app-color-settings></app-color-settings>
+                    </div>
+                </ng-template>
             </mat-tab>
 
             <mat-tab>
@@ -15,9 +17,11 @@
                     <mat-icon class="example-tab-icon">brightness_5</mat-icon>
                     LED Brightness
                 </ng-template>
-                <div class="tab-container">     
-                    <app-led-brightness></app-led-brightness>
-                </div>
+                <ng-template matTabContent>
+                    <div class="tab-container">     
+                        <app-led-brightness></app-led-brightness>
+                    </div>
+                </ng-template>
             </mat-tab>
     
             <mat-tab>
@@ -25,9 +29,11 @@
                     <mat-icon class="example-tab-icon">blur_linear</mat-icon>
                     LED Falloff
                 </ng-template>
-                <div class="tab-container">     
-                    <app-led-falloff></app-led-falloff>
-                </div>
+                <ng-template matTabContent>
+                    <div class="tab-container">     
+                        <app-led-falloff></app-led-falloff>
+                    </div>
+                </ng-template>
             </mat-tab>
 
         </mat-tab-group>
