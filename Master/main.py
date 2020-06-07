@@ -2,7 +2,9 @@ import requests
 from Communication.udpTransmitter import UdpTransmitter
 from audioProcessor import AudioProcessor
 
-from Communication.udpAudioSettingsManager import UdpAudioSettingsManager
+from Communication.udpMasterSettingsManager import UdpMasterSettingsManager
+
+from motorController import MotorController
 
 if __name__ == '__main__':
     udp_transmitter = UdpTransmitter('192.168.0.69', 6942)
@@ -20,7 +22,8 @@ if __name__ == '__main__':
     )
     stop_event = audio_processor.start(interval=0.001)
 
-    setting_receiver = UdpAudioSettingsManager('192.168.0.70', 6943, audio_processor)
+    motorController = MotorController()
+    setting_receiver = UdpMasterSettingsManager('192.168.0.70', 6943, audio_processor, motorController)
 
     try:
         setting_receiver.start_loop()

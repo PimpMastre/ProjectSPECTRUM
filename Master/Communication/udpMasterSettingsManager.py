@@ -1,11 +1,12 @@
 import socket
 
 
-class UdpAudioSettingsManager:
-    def __init__(self, bind_ip, bind_port, audio_processor):
+class UdpMasterSettingsManager:
+    def __init__(self, bind_ip, bind_port, audio_processor, motor_controller):
         self.__bind_ip = bind_ip
         self.__bind_port = bind_port
         self.__audio_processor = audio_processor
+        self.__motor_controller = motor_controller
 
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.__socket.bind((self.__bind_ip, self.__bind_port))
@@ -28,6 +29,8 @@ class UdpAudioSettingsManager:
             self.__audio_processor.prev_peaks = [[0 for x in range(self.__audio_processor.num_bars)] for y in range(self.__audio_processor.prev_peaks_buffer_length)]
         elif identifier == 'velocity':
             self.__audio_processor.velocity = float(new_value)
+        elif identifier == 'motorSpeed':
+            self.__motor_controller.update_speed(int(new_value))
 
     def start_loop(self):
         while True:
