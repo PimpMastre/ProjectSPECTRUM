@@ -21,7 +21,7 @@ class UdpSlaveSettingsManager:
         elif identifier == 'ledFalloff':
             self.__falloff_data_manager.update_buffer(int(new_value))
         elif identifier == 'brightness':
-            self.__brightness_data_manager.update_brightness(float(new_value))
+            self.__brightness_data_manager.update_buffer(float(new_value))
 
     def start_loop(self):
         while True:

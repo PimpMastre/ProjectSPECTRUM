@@ -52,7 +52,7 @@ class Worker:
         brightness = str(self.led_brightness.buf[1]) + '.' + str(self.led_brightness.buf[2]) + str(self.led_brightness.buf[3])
         return float(brightness)
 
-    def on_magnet_pass(self, x):
+    def on_magnet_pass(self, gpio, level, tick):
         self.wait(self.get_rotation_time())
 
         for bar_index in range(self.bars_per_sector):

@@ -7,7 +7,7 @@ from SharedMemoryManagers.ledColorManager import LedColorManager
 from SharedMemoryManagers.ledDataManager import LedDataManager
 from SharedMemoryManagers.rotationTimeManager import RotationTimeManager
 from SharedMemoryManagers.ledFalloffManager import LedFalloffManager
-from SharedMemoryManagers.ledFalloffManager import LedBrightnessManager
+from SharedMemoryManagers.ledBrightnessManager import LedBrightnessManager
 
 from Communication.udpRealtimeReceiverThread import UdpRealtimeReceiverThread
 from Communication.udpSlaveSettingsManager import UdpSlaveSettingsManager
@@ -27,7 +27,7 @@ class Master:
 
         self.__pigpio = pigpio.pi()
 
-    def on_magnet_pass(self, x):
+    def on_magnet_pass(self, gpio, level, tick):
         new_stamp = default_timer()
         stamp = new_stamp - self.previous_timestamp
         self.previous_timestamp = new_stamp
@@ -55,16 +55,16 @@ class Master:
         self.start_workers()
         self.start_magnet_detection()
 
-        api_data = requests.get("http://192.168.0.70/master/getAll")
+        api_data = requests.get("http://192.168.0.70:5000/slave/getAll")
         api_colors = api_data.json()['colors'].split(',')
         for i in range(len(api_colors) // 3):
-            red = api_colors[i * 3]
-            green = api_colors[i * 3 + 1]
-            blue = api_colors[i * 3 + 2]
+            red = int(api_colors[i * 3])
+            green = int(api_colors[i * 3 + 1])
+            blue = int(api_colors[i * 3 + 2])
             self.led_color_manager.update_buffer((red, green, blue), i)
 
         self.led_falloff_manager.update_buffer(int(api_data.json()['ledFalloff']))
-        self.led_brightness_manager.update_brightness(float(api_data.json()['brightness']))
+        self.led_brightness_manager.update_buffer(float(api_data.json()['brightness']))
 
         led_data_thread = UdpRealtimeReceiverThread("192.168.0.69", 6942, self.led_data_manager)
         led_data_thread.start()
