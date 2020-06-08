@@ -1,6 +1,6 @@
 # Simple demo of of the WS2801/SPI-like addressable RGB LED lights.
 import time
-import RPi.GPIO as GPIO
+import pigpio
 import sys
 from timeit import default_timer
 from multiprocessing import shared_memory
@@ -20,9 +20,11 @@ class Worker:
         self.led_brightness = shared_memory.SharedMemory("LedBrightness", False)
         self.rotation_time = shared_memory.SharedMemory("RotationTime", False)
 
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(17, GPIO.RISING, callback=self.on_magnet_pass, bouncetime=1)
+        self.__pigpio = pigpio.pi()
+        self.__pigpio.callback(17, pigpio.FALLING_EDGE, self.on_magnet_pass)
+        #GPIO.setmode(GPIO.BCM)
+        #GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        #GPIO.add_event_detect(17, GPIO.RISING, callback=self.on_magnet_pass, bouncetime=1)
 
     def get_rotation_time(self):
         stamp_len = self.rotation_time.buf[0]

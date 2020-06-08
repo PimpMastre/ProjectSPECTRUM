@@ -1,6 +1,6 @@
 import requests
 import subprocess
-import RPi.GPIO as GPIO
+import pigpio
 from timeit import default_timer
 
 from SharedMemoryManagers.ledColorManager import LedColorManager
@@ -25,6 +25,8 @@ class Master:
         self.led_falloff_manager = LedFalloffManager()
         self.led_brightness_manager = LedBrightnessManager()
 
+        self.__pigpio = pigpio.pi()
+
     def on_magnet_pass(self, x):
         new_stamp = default_timer()
         stamp = new_stamp - self.previous_timestamp
@@ -44,9 +46,10 @@ class Master:
             print(pidobj.pid)
 
     def start_magnet_detection(self):
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(17, GPIO.FALLING, callback=self.on_magnet_pass, bouncetime=1)
+        self.__pigpio.callback(17, pigpio.FALLING_EDGE, self.on_magnet_pass)
+        #GPIO.setmode(GPIO.BCM)
+        #GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        #GPIO.add_event_detect(17, GPIO.FALLING, callback=self.on_magnet_pass, bouncetime=1)
 
     def start_loop(self):
         self.start_workers()
