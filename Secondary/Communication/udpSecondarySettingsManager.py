@@ -1,7 +1,7 @@
 import socket
 
 
-class UdpSlaveSettingsManager:
+class UdpSecondarySettingsManager:
     def __init__(self, bind_ip, bind_port, color_data_manager, falloff_data_manager, brightness_data_manager):
         self.__bind_ip = bind_ip
         self.__bind_port = bind_port

@@ -1,6 +1,7 @@
 import requests
 import subprocess
 import pigpio
+import os
 from timeit import default_timer
 
 from SharedMemoryManagers.ledColorManager import LedColorManager
@@ -10,7 +11,7 @@ from SharedMemoryManagers.ledFalloffManager import LedFalloffManager
 from SharedMemoryManagers.ledBrightnessManager import LedBrightnessManager
 
 from Communication.udpRealtimeReceiverThread import UdpRealtimeReceiverThread
-from Communication.udpSlaveSettingsManager import UdpSlaveSettingsManager
+from Communication.udpSecondarySettingsManager import UdpSecondarySettingsManager
 
 
 class Master:
@@ -47,11 +48,11 @@ class Master:
 
     def start_magnet_detection(self):
         self.__pigpio.callback(17, pigpio.FALLING_EDGE, self.on_magnet_pass)
-        #GPIO.setmode(GPIO.BCM)
-        #GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        #GPIO.add_event_detect(17, GPIO.FALLING, callback=self.on_magnet_pass, bouncetime=1)
 
     def start_loop(self):
+        # start the pigpio daemon
+        os.system("sudo pigpiod")
+
         self.start_workers()
         self.start_magnet_detection()
 
@@ -68,7 +69,7 @@ class Master:
 
         led_data_thread = UdpRealtimeReceiverThread("192.168.0.69", 6942, self.led_data_manager)
         led_data_thread.start()
-        settings_manager = UdpSlaveSettingsManager("192.168.0.69", 6943, self.led_color_manager, self.led_falloff_manager, self.led_brightness_manager)
+        settings_manager = UdpSecondarySettingsManager("192.168.0.69", 6943, self.led_color_manager, self.led_falloff_manager, self.led_brightness_manager)
 
         try:
             settings_manager.start_loop()

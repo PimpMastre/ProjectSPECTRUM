@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { style, trigger, transition, animate } from '@angular/animations';
-import { HttpClient } from '@angular/common/http';
 import { MasterService } from './master/service/master.service';
 import { SlaveService } from './slave/service/slave.service';
 

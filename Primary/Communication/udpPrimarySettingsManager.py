@@ -1,7 +1,7 @@
 import socket
 
 
-class UdpMasterSettingsManager:
+class UdpPrimarySettingsManager:
     def __init__(self, bind_ip, bind_port, audio_processor, motor_controller):
         self.__bind_ip = bind_ip
         self.__bind_port = bind_port

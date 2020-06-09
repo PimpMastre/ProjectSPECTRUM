@@ -22,9 +22,6 @@ class Worker:
 
         self.__pigpio = pigpio.pi()
         self.__pigpio.callback(17, pigpio.FALLING_EDGE, self.on_magnet_pass)
-        #GPIO.setmode(GPIO.BCM)
-        #GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        #GPIO.add_event_detect(17, GPIO.RISING, callback=self.on_magnet_pass, bouncetime=1)
 
     def get_rotation_time(self):
         stamp_len = self.rotation_time.buf[0]
@@ -48,19 +45,18 @@ class Worker:
         return int(self.led_falloff.buf[0])
 
     def get_led_brightness(self):
-        length = int(self.led_brightness.buf[0])
         brightness = str(self.led_brightness.buf[1]) + '.' + str(self.led_brightness.buf[2]) + str(self.led_brightness.buf[3])
         return float(brightness)
 
     def on_magnet_pass(self, gpio, level, tick):
         self.wait(self.get_rotation_time())
 
-        for bar_index in range(self.bars_per_sector):
-            led_color = self.get_section_led_color(bar_index)
-            led_falloff = self.get_led_falloff_value()
-            led_brightness = self.get_led_brightness()
-            section_height = self.get_section_led_height(bar_index)
-            self.leds.show_range(0, section_height, led_color, led_brightness, led_falloff)
+        bar_index = self.sector_number
+        led_color = self.get_section_led_color(bar_index)
+        led_falloff = self.get_led_falloff_value()
+        led_brightness = self.get_led_brightness()
+        section_height = self.get_section_led_height(bar_index)
+        self.leds.show_range(0, section_height, led_color, led_brightness, led_falloff)
 
 
 if __name__ == "__main__":

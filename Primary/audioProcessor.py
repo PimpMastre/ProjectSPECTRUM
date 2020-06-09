@@ -17,8 +17,8 @@ class AudioProcessor:
         :param rate: sample rate
         :param chunksz: chunk size
         :param udp: UdpTransmitter object for address and port binding
-        :param rip: ip address of receiver (slave)
-        :param rp: port of receiver (slave)
+        :param rip: ip address of receiver (secondary)
+        :param rp: port of receiver (secondary)
         """
         self.connection = udp
 
@@ -61,7 +61,6 @@ class AudioProcessor:
         self.prev_peaks.append(new_peaks)
 
     def transform_stream(self):
-        # TODO: ADD EQUALIZER
         plot_points = []
         if self.mapping_style == 1:
             plot_points = np.geomspace(self.lower_chunk_margin, self.higher_chunk_margin, num=self.num_bars + 1)
@@ -104,8 +103,8 @@ class AudioProcessor:
         """
         Starts the processing and sending thread
         :param interval: the interval at which to process the data
-        :param destination_ip: the ip of the slave to which to send the data
-        :param destination_port: the port of the slave to which to send the data
+        :param destination_ip: the ip of the secondary to which to send the data
+        :param destination_port: the port of the secondary to which to send the data
         :return: the stop trigger for the processing thread
         """
 

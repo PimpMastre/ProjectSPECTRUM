@@ -2,6 +2,7 @@ import Adafruit_WS2801
 import Adafruit_GPIO.SPI as SPI
 import RPi.GPIO as GPIO
 
+
 class LedExtensions:
     def __init__(self, led_count=18, spi_port=0, spi_device=0):
         self.leds = Adafruit_WS2801.WS2801Pixels(led_count, spi=SPI.SpiDev(spi_port, spi_device), gpio=GPIO)

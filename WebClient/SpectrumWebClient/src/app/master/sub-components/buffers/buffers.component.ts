@@ -15,7 +15,7 @@ export class BuffersComponent implements OnInit {
 
   ngOnInit(): void {
     this.bufferLength = this.masterService.settings['previousPeaksBufferLength'];
-    this.velocity = this.masterService.settings['velocity'];
+    this.velocity = this.masterService.settings['velocity'] * 100;
   }
 
   onBufferLengthChanged(event) {
