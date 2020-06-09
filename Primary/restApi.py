@@ -34,6 +34,14 @@ def update_master_setting(setting_name):
     if not request.json:
         abort(400)
 
+    if setting_name == 'numberOfBars':
+        new_value = int(request.json['newValue'])
+        secondary_colors = secondary_settings.settings['colors'].split(',')
+        if len(secondary_colors) < new_value * 3:
+            while len(secondary_colors) < new_value * 3:
+                secondary_colors.append('0')
+            secondary_settings.settings['colors'] = ','.join(secondary_colors)
+
     primary_settings.settings[setting_name] = str(request.json['newValue'])
     primary_transmitter.send_pair((setting_name, primary_settings.settings[setting_name]))
 
@@ -65,10 +73,11 @@ def update_slave_setting(setting_name):
 
 @app.route('/slave/update/colors/<int:index>', methods=['POST'])
 def update_slave_color(index):
+    number_of_bars = int(primary_settings.settings['numberOfBars'])
     previous_colors = secondary_settings.settings['colors']
     color_list = previous_colors.split(',')
 
-    if len(color_list) // 3 <= index:
+    if number_of_bars <= index:
         abort(400)
     if not request.json:
         abort(400)
@@ -86,6 +95,7 @@ def update_slave_color(index):
 @app.route('/saveAllSettings')
 def save_all():
     save_all_settings()
+    return ''
 
 
 def save_all_settings():
