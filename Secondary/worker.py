@@ -34,11 +34,11 @@ class Worker:
             time.sleep(time_to_sleep)
 
     def get_section_led_height(self, bar_index):
-        led_height_percentage = self.led_positions.buf[(self.sector_number * self.bars_per_sector) + bar_index]
+        led_height_percentage = self.led_positions.buf[(self.sector_number * self.bars_per_sector)]
         return min(self.leds.get_led_count(), int(max(1, 1 + led_height_percentage * self.leds.get_led_count() / 100)))
 
     def get_section_led_color(self, bar_index):
-        offset = ((self.sector_number * self.bars_per_sector) + bar_index) * 3
+        offset = (self.sector_number * self.bars_per_sector) * 3
         return (int(self.led_colors.buf[offset]), int(self.led_colors.buf[offset + 1]), int(self.led_colors.buf[offset + 2]))
 
     def get_led_falloff_value(self):
