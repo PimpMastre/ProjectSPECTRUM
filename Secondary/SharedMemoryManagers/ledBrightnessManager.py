@@ -1,4 +1,5 @@
 from multiprocessing import shared_memory
+import struct
 
 
 class LedBrightnessManager:
@@ -10,13 +11,6 @@ class LedBrightnessManager:
         self.shared_buffer.unlink()
 
     def update_buffer(self, brightness):
-        length = len(str(brightness))
-        self.shared_buffer.buf[0] = 3
-        if int(brightness) != brightness:
-            self.shared_buffer.buf[1] = int(str(brightness)[0])
-            self.shared_buffer.buf[2] = int(str(brightness)[2])
-            self.shared_buffer.buf[3] = int(str(brightness)[3])
-        else:
-            self.shared_buffer.buf[1] = int(str(brightness)[0])
-            self.shared_buffer.buf[2] = 0
-            self.shared_buffer.buf[3] = 0
+        brightness_bytes = bytearray(struct.pack("f", brightness))
+
+        self.shared_buffer.buf[:len(brightness_bytes)] = brightness_bytes

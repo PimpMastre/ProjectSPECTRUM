@@ -1,5 +1,5 @@
 from multiprocessing import shared_memory
-
+import struct
 
 class RotationTimeManager:
     def __init__(self, buffer_name="RotationTime", buffer_size=64):
@@ -14,7 +14,5 @@ class RotationTimeManager:
         Updates the shared buffer with a new duration. it sends only the fractional part
         :param duration_timestamp: a float representing the duration of a rotation
         """
-        stamp = str(duration_timestamp)[2:]
-        self.shared_buffer.buf[0] = len(stamp)
-        for i in range(len(stamp)):
-            self.shared_buffer.buf[i + 1] = int(stamp[i])
+        timestamp_bytes = bytearray(struct.pack("f", duration_timestamp))
+        self.shared_buffer.buf[:len(duration_timestamp)] = timestamp_bytes

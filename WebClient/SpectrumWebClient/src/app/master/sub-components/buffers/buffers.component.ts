@@ -29,7 +29,7 @@ export class BuffersComponent implements OnInit {
   }
   
   onDataAveragingChanged(event) {
-    this.dataAveraging = event.valuel
+    this.dataAveraging = event.value;
 
     this.masterService.updateDataAveraging(this.dataAveraging);
   }
