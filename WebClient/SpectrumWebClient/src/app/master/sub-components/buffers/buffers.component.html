@@ -21,3 +21,18 @@
         </mat-slider>
     </div>
 </div>
+
+<div class="slider-field">
+    <label>Data Averaging:</label>
+    <mat-slider
+        color="primary"
+        thumbLabel
+        min="0"
+        max="100"
+        tickInterval="100"
+        step="1"
+        [displayWith]="formatDataAveraging"
+        [(value)]="dataAveraging"
+        (change)="onDataAveragingChanged($event)">
+    </mat-slider>
+</div>

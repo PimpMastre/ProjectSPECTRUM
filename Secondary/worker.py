@@ -8,10 +8,9 @@ from Utils.ledExtensions import LedExtensions
 
 
 class Worker:
-    def __init__(self, sector_count, sector_number, bars_per_sector):
+    def __init__(self, sector_count, sector_number):
         self.sector_count = sector_count
         self.sector_number = sector_number
-        self.bars_per_sector = bars_per_sector
         self.leds = LedExtensions()
 
         self.led_positions = shared_memory.SharedMemory("LedData", False)
@@ -34,11 +33,11 @@ class Worker:
             time.sleep(time_to_sleep)
 
     def get_section_led_height(self, bar_index):
-        led_height_percentage = self.led_positions.buf[(self.sector_number * self.bars_per_sector)]
+        led_height_percentage = self.led_positions.buf[self.sector_number]
         return min(self.leds.get_led_count(), int(max(1, 1 + led_height_percentage * self.leds.get_led_count() / 100)))
 
     def get_section_led_color(self, bar_index):
-        offset = (self.sector_number * self.bars_per_sector) * 3
+        offset = self.sector_number * 3
         return (int(self.led_colors.buf[offset]), int(self.led_colors.buf[offset + 1]), int(self.led_colors.buf[offset + 2]))
 
     def get_led_falloff_value(self):
@@ -63,7 +62,7 @@ if __name__ == "__main__":
     totalThreadCount = int(sys.argv[1])
     currentThreadNumber = int(sys.argv[2])
 
-    worker = Worker(totalThreadCount, currentThreadNumber, 1)
+    worker = Worker(totalThreadCount, currentThreadNumber)
 
     try:
         while True:

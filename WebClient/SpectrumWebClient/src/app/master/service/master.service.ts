@@ -17,6 +17,7 @@ export class MasterService {
   private updateLowerChunkMarginUrl = this.updateAddress + "lowerChunkMargin";
   private updateHigherChunkMarginUrl = this.updateAddress + "higherChunkMargin";
   private updateDataAmplificationUrl = this.updateAddress + "dataAmplification";
+  private updateDataAveragingUrl = this.updateAddress + "dataAveraging"
   private updateAmplitudeClipUrl = this.updateAddress + "amplitudeClip";
   private updateBufferLengthUrl = this.updateAddress + "previousPeaksBufferLength";
   private updateVelocityUrl = this.updateAddress + "velocity";
@@ -55,6 +56,12 @@ export class MasterService {
   }
 
   public updateDataAmplification(newValue) {
+    const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
+    const params = this.buildParams(newValue);
+    this.httpClient.post(this.updateDataAmplificationUrl, params, options).subscribe(result => this.getAllSettings());
+  }
+
+  public updateDataAveraging(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
     this.httpClient.post(this.updateDataAmplificationUrl, params, options).subscribe(result => this.getAllSettings());
