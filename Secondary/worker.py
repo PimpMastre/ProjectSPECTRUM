@@ -3,6 +3,7 @@ import time
 import pigpio
 import sys
 import struct
+import math
 from timeit import default_timer
 from multiprocessing import shared_memory
 from Utils.ledExtensions import LedExtensions
@@ -24,7 +25,8 @@ class Worker:
         self.__pigpio.callback(17, pigpio.FALLING_EDGE, self.on_magnet_pass)
 
     def get_rotation_time(self):
-        return struct.unpack("f", bytes(self.led_brightness.buf[:4]))
+        rotation_time = struct.unpack("f", bytes(self.rotation_time.buf[:4]))[0]
+        return min(5.0, rotation_time)
 
     def wait(self, full_rotation_time):
         if self.sector_number != 0:
@@ -33,7 +35,7 @@ class Worker:
 
     def get_section_led_height(self, bar_index):
         led_height_percentage = self.led_positions.buf[self.sector_number]
-        return min(self.leds.get_led_count(), int(max(1, 1 + led_height_percentage * self.leds.get_led_count() / 100)))
+        return min(self.leds.get_led_count(), int(max(1, math.ceil(1 + led_height_percentage * self.leds.get_led_count() / 100))))
 
     def get_section_led_color(self, bar_index):
         offset = self.sector_number * 3
@@ -43,7 +45,7 @@ class Worker:
         return int(self.led_falloff.buf[0])
 
     def get_led_brightness(self):
-        return struct.unpack("f", bytes(self.led_brightness.buf[:4]))
+        return struct.unpack("f", bytes(self.led_brightness.buf[:4]))[0]
 
     def on_magnet_pass(self, gpio, level, tick):
         self.wait(self.get_rotation_time())

@@ -15,4 +15,4 @@ class RotationTimeManager:
         :param duration_timestamp: a float representing the duration of a rotation
         """
         timestamp_bytes = bytearray(struct.pack("f", duration_timestamp))
-        self.shared_buffer.buf[:len(duration_timestamp)] = timestamp_bytes
+        self.shared_buffer.buf[:len(timestamp_bytes)] = timestamp_bytes
