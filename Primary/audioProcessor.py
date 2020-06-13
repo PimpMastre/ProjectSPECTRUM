@@ -62,10 +62,18 @@ class AudioProcessor:
         self.prev_peaks.append(new_peaks)
 
     def get_section_average(self, section):
-        highest_value_index = section.index(max(section))
-        extra_values_count = self.averaging_rate * 100 // len(section)
-        return np.average(section[max(0, highest_value_index - extra_values_count)],
-                          min(len(section) - 1, highest_value_index + extra_values_count))
+        highest_value_index = (np.where(section == max(section)))[0][0]
+        extra_values_count = self.averaging_rate * len(section) // 100
+
+        first_element_index = max(0, highest_value_index - extra_values_count)
+        last_element_index = min(len(section) - 1, highest_value_index + extra_values_count)
+        if first_element_index == last_element_index:
+            if last_element_index == len(section) - 1:
+                first_element_index = first_element_index - 1
+            else:
+                last_element_index = last_element_index + 1
+                
+        return np.average(section[first_element_index : last_element_index])
 
     def transform_stream(self):
         plot_points = []
@@ -73,7 +81,7 @@ class AudioProcessor:
             plot_points = np.geomspace(self.lower_chunk_margin, self.higher_chunk_margin, num=self.num_bars + 1)
         else:
             plot_points = np.linspace(self.lower_chunk_margin, self.higher_chunk_margin, num=self.num_bars + 1)
-
+    
         absolute_data = np.clip(np.abs(self.spectrum_data), a_min=0, a_max=self.amplitude_clip)
         current_averages = []
         
@@ -82,10 +90,13 @@ class AudioProcessor:
 
             # get average of current section
             section_average = self.get_section_average(section)
-            section_average = np.average(section)
+            if x == 0:
+                section_average = section_average / 2
+            
             # calculate with velocity
-            distance = section_average - self.prev_peaks[len(self.prev_peaks) - 1][x]
-            section_average = (self.prev_peaks[len(self.prev_peaks) - 1][x] + distance) * self.velocity
+            if x == len(self.prev_peaks[-1]) - 1:
+                distance = section_average - self.prev_peaks[-1][x]
+                section_average = (self.prev_peaks[-1][x] + distance) * self.velocity
       
             # amplify
             amplification_value = self.data_amplification * section_average / 100
@@ -97,7 +108,7 @@ class AudioProcessor:
     def send_data(self):
         data = self.processed_data
         for i in range(len(data)):
-            data[i] = data[i] * 100 / self.amplitude_clip
+            data[i] = min(100, data[i] * 100 / self.amplitude_clip)
         
         data = str(list(data))
         self.connection.send(data)

@@ -17,8 +17,8 @@ if __name__ == '__main__':
         da=int(api_data.json()['dataAmplification']),
         ac=int(api_data.json()['amplitudeClip']),
         ppbl=int(api_data.json()['previousPeaksBufferLength']),
-        vel=float(api_data.json()['velocity']) / 100,
-        ar=int(api_data.json()['averagingRate']),
+        vel=float(api_data.json()['velocity']),
+        ar=int(api_data.json()['dataAveraging']),
         udp=udp_transmitter
     )
     stop_event = audio_processor.start(interval=0.001)
