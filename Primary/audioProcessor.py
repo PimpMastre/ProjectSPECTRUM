@@ -4,7 +4,7 @@ from Utils.timerThread import TimerThread
 
 
 class AudioProcessor:
-    def __init__(self, nb=5, lcm=20, hcm=1024, ac=1000000, ms=0, da=200, ppbl=2, ch=2, rate=44100, chunksz=2048, vel=0.33, udp=None):
+    def __init__(self, nb=5, lcm=20, hcm=1024, ac=1000000, ms=0, da=200, ppbl=2, ch=2, rate=44100, chunksz=2048, vel=0.33, ar=10, udp=None):
         """
         :param nb: number of bars to interpret data with
         :param lcm: lower range chunk cut, cuts the lower ranges by fcl percent
@@ -27,6 +27,7 @@ class AudioProcessor:
 
         # data transformation parameters
         self.velocity = vel
+        self.averaging_rate = ar
         self.num_bars = nb
         self.lower_chunk_margin = lcm
         self.higher_chunk_margin = hcm
@@ -60,6 +61,12 @@ class AudioProcessor:
         self.prev_peaks.pop(0)
         self.prev_peaks.append(new_peaks)
 
+    def get_section_average(self, section):
+        highest_value_index = section.index(max(section))
+        extra_values_count = self.averaging_rate * 100 // len(section)
+        return np.average(section[max(0, highest_value_index - extra_values_count)],
+                          min(len(section) - 1, highest_value_index + extra_values_count))
+
     def transform_stream(self):
         plot_points = []
         if self.mapping_style == 1:
@@ -74,6 +81,7 @@ class AudioProcessor:
             section = absolute_data[int(plot_points[x]):int(plot_points[x + 1])]
 
             # get average of current section
+            section_average = self.get_section_average(section)
             section_average = np.average(section)
             # calculate with velocity
             distance = section_average - self.prev_peaks[len(self.prev_peaks) - 1][x]

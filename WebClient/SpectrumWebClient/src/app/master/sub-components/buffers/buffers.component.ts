@@ -12,10 +12,12 @@ export class BuffersComponent implements OnInit {
 
   public bufferLength = 2;
   public velocity = 33;
+  public dataAveraging = 10;
 
   ngOnInit(): void {
     this.bufferLength = this.masterService.settings['previousPeaksBufferLength'];
     this.velocity = this.masterService.settings['velocity'] * 100;
+    this.dataAveraging = this.masterService.settings['dataAveraging'];
   }
 
   onBufferLengthChanged(event) {
@@ -25,6 +27,12 @@ export class BuffersComponent implements OnInit {
 
     this.masterService.updateBufferLength(this.bufferLength);
   }
+  
+  onDataAveragingChanged(event) {
+    this.dataAveraging = event.valuel
+
+    this.masterService.updateDataAveraging(this.dataAveraging);
+  }
 
   onVelocityChanged(event) {
     this.masterService.updateVelocity(this.velocity / 100);
@@ -32,5 +40,9 @@ export class BuffersComponent implements OnInit {
 
   formatVelocity(value) {
     return value + '%';
+  }
+
+  formatDataAveraging(value) {
+    return value + "%";
   }
 }
