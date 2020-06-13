@@ -64,7 +64,7 @@ export class MasterService {
   public updateDataAveraging(newValue) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     const params = this.buildParams(newValue);
-    this.httpClient.post(this.updateDataAmplificationUrl, params, options).subscribe(result => this.getAllSettings());
+    this.httpClient.post(this.updateDataAveragingUrl, params, options).subscribe(result => this.getAllSettings());
   }
 
   public updateAmplitudeClip(newValue) {
